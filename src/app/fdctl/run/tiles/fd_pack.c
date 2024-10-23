@@ -225,6 +225,22 @@ typedef struct {
     long metric_timing[ 16 ];
   };
 
+  struct {
+    ulong id;
+    ulong txn_cnt;
+    ulong txn_received;
+    ulong min_blockhash_slot;
+    fd_txn_e_t txn[ FD_PACK_MAX_TXN_PER_BUNDLE ];
+  } current_bundle[1];
+
+  struct {
+    struct {
+      fd_acct_addr_t commission_pubkey[1];
+      ulong          commision;
+    } current, next;
+  } blk_engine_cfg[1];
+
+
   /* Used between during_frag and after_frag */
   ulong pending_rebate_cnt;
   fd_txn_p_t pending_rebate[ MAX_TXN_PER_MICROBLOCK ]; /* indexed [0, pending_rebate_cnt) */
@@ -272,6 +288,7 @@ scratch_footprint( fd_topo_tile_t const * tile ) {
   l = FD_LAYOUT_APPEND( l, alignof( fd_pack_ctx_t ), sizeof( fd_pack_ctx_t )                                   );
   l = FD_LAYOUT_APPEND( l, fd_rng_align(),           fd_rng_footprint()                                        );
   l = FD_LAYOUT_APPEND( l, fd_pack_align(),          fd_pack_footprint( tile->pack.max_pending_transactions,
+                                                                        0UL,
                                                                         tile->pack.bank_tile_count,
                                                                         limits                               ) );
 #if FD_PACK_USE_EXTRA_STORAGE
@@ -651,35 +668,48 @@ during_frag( fd_pack_ctx_t * ctx,
       FD_MCNT_INC( PACK, TRANSACTION_EXPIRED, exp_cnt );
     }
 
-#if FD_PACK_USE_EXTRA_STORAGE
-    if( FD_LIKELY( ctx->leader_slot!=ULONG_MAX || fd_pack_avail_txn_cnt( ctx->pack )<ctx->max_pending_transactions ) ) {
-      ctx->cur_spot = fd_pack_insert_txn_init( ctx->pack );
-      ctx->insert_to_extra = 0;
-    } else {
-      if( FD_UNLIKELY( extra_txn_deq_full( ctx->extra_txn_deq ) ) ) {
-        extra_txn_deq_remove_head( ctx->extra_txn_deq );
-        FD_MCNT_INC( PACK, TRANSACTION_DROPPED_FROM_EXTRA, 1UL );
+    fd_txn_m_t * txnm = (fd_txn_m_t *)dcache_entry;
+    fd_txn_t * txn  = fd_txn_m_txn_t( txnm );
+
+    if( FD_UNLIKELY( txnm->block_engine.bundle_id ) ) {
+      if( FD_LIKELY( txnm->block_engine.bundle_id!=ctx->current_bundle->id ) ) {
+        ctx->current_bundle->id                 = txnm->block_engine.bundle_id;
+        ctx->current_bundle->txn_cnt            = txnm->block_engine.bundle_txn_cnt;
+        ctx->current_bundle->min_blockhash_slot = ULONG_MAX;
+        ctx->current_bundle->txn_received       = 0UL;
       }
-      ctx->cur_spot = extra_txn_deq_peek_tail( extra_txn_deq_insert_tail( ctx->extra_txn_deq ) );
-      /* We want to store the current time in cur_spot so that we can
-         track its expiration better.  We just stash it in the CU
-         fields, since those aren't important right now. */
-      ctx->cur_spot->txnp->blockhash_slot = sig;
-      ctx->insert_to_extra                = 1;
-      FD_MCNT_INC( PACK, TRANSACTION_INSERTED_TO_EXTRA, 1UL );
-    }
+      ctx->cur_spot                           = ctx->current_bundle->txn + ctx->current_bundle->txn_received;
+      ctx->current_bundle->min_blockhash_slot = fd_ulong_min( ctx->current_bundle->min_blockhash_slot, sig );
+      /* TODO: handle commission stuff */
+
+    } else {
+#if FD_PACK_USE_EXTRA_STORAGE
+      if( FD_LIKELY( ctx->leader_slot!=ULONG_MAX || fd_pack_avail_txn_cnt( ctx->pack )<ctx->max_pending_transactions ) ) {
+        ctx->cur_spot = fd_pack_insert_txn_init( ctx->pack );
+        ctx->insert_to_extra = 0;
+      } else {
+        if( FD_UNLIKELY( extra_txn_deq_full( ctx->extra_txn_deq ) ) ) {
+          extra_txn_deq_remove_head( ctx->extra_txn_deq );
+          FD_MCNT_INC( PACK, TRANSACTION_DROPPED_FROM_EXTRA, 1UL );
+        }
+        ctx->cur_spot = extra_txn_deq_peek_tail( extra_txn_deq_insert_tail( ctx->extra_txn_deq ) );
+        /* We want to store the current time in cur_spot so that we can
+           track its expiration better.  We just stash it in the CU
+           fields, since those aren't important right now. */
+        ctx->cur_spot->txnp->blockhash_slot = sig;
+        ctx->insert_to_extra                = 1;
+        FD_MCNT_INC( PACK, TRANSACTION_INSERTED_TO_EXTRA, 1UL );
+      }
 #else
-    ctx->cur_spot = fd_pack_insert_txn_init( ctx->pack );
+      ctx->cur_spot = fd_pack_insert_txn_init( ctx->pack );
 #endif
+    }
 
     /* We get transactions from the resolv tile.
        The transactions should have been parsed and verified. */
     FD_MCNT_INC( PACK, NORMAL_TRANSACTION_RECEIVED, 1UL );
 
-    fd_txn_m_t * txnm = (fd_txn_m_t *)dcache_entry;
-    fd_txn_t * txn  = fd_txn_m_txn_t( txnm );
 
-    /* TODO: handle bundles if txnm->block_engine.bundle_id!=0 */
     fd_memcpy( ctx->cur_spot->txnp->payload, fd_txn_m_payload( txnm ), txnm->payload_sz              );
     fd_memcpy( TXN(ctx->cur_spot->txnp),     txn,                      txnm->txn_t_sz                );
     fd_memcpy( ctx->cur_spot->alt_accts,     fd_txn_m_alut( txnm ),    32UL*txn->addr_table_adtl_cnt );
@@ -736,6 +766,18 @@ after_frag( fd_pack_ctx_t *     ctx,
 #else
     if( 1 ) {
 #endif
+    if( FD_UNLIKELY( (ulong)(ctx->cur_spot - ctx->current_bundle->txn)<FD_PACK_MAX_TXN_PER_BUNDLE) ) {
+      if( FD_UNLIKELY( ++(ctx->current_bundle->txn_received)==ctx->current_bundle->txn_cnt ) ) {
+        /* TODO: eliminate this memcpy */
+        fd_txn_e_t * _bundle[ FD_PACK_MAX_TXN_PER_BUNDLE ];
+        fd_txn_e_t * const * bundle = fd_pack_insert_bundle_init( ctx->pack, _bundle, ctx->current_bundle->txn_cnt );
+
+        for( ulong i=0UL; i<ctx->current_bundle->txn_cnt; i++ ) {
+          *(bundle[ i ]) = ctx->current_bundle->txn[ i ];
+        }
+        fd_pack_insert_bundle_fini( ctx->pack, bundle, ctx->current_bundle->txn_cnt, ctx->current_bundle->min_blockhash_slot, 0 );
+      }
+    } else {
       ulong blockhash_slot = sig;
       long insert_duration = -fd_tickcount();
       int result = fd_pack_insert_txn_fini( ctx->pack, ctx->cur_spot, blockhash_slot );
@@ -743,6 +785,7 @@ after_frag( fd_pack_ctx_t *     ctx,
       ctx->insert_result[ result + FD_PACK_INSERT_RETVAL_OFF ]++;
       fd_histf_sample( ctx->insert_duration, (ulong)insert_duration );
       if( FD_LIKELY( result>=0 ) ) ctx->last_successful_insert = now;
+    }
     }
 
     ctx->cur_spot = NULL;
@@ -769,7 +812,7 @@ unprivileged_init( fd_topo_t *      topo,
 
   if( FD_UNLIKELY( tile->pack.max_pending_transactions >= USHORT_MAX ) ) FD_LOG_ERR(( "pack tile supports up to %lu pending transactions", USHORT_MAX-1UL ));
 
-  ulong pack_footprint = fd_pack_footprint( tile->pack.max_pending_transactions, tile->pack.bank_tile_count, limits );
+  ulong pack_footprint = fd_pack_footprint( tile->pack.max_pending_transactions, 0UL, tile->pack.bank_tile_count, limits );
 
   FD_SCRATCH_ALLOC_INIT( l, scratch );
   fd_pack_ctx_t * ctx = FD_SCRATCH_ALLOC_APPEND( l, alignof( fd_pack_ctx_t ), sizeof( fd_pack_ctx_t ) );
@@ -777,7 +820,7 @@ unprivileged_init( fd_topo_t *      topo,
   if( FD_UNLIKELY( !rng ) ) FD_LOG_ERR(( "fd_rng_new failed" ));
 
   ctx->pack = fd_pack_join( fd_pack_new( FD_SCRATCH_ALLOC_APPEND( l, fd_pack_align(), pack_footprint ),
-                                         tile->pack.max_pending_transactions, tile->pack.bank_tile_count,
+                                         tile->pack.max_pending_transactions, 0UL, tile->pack.bank_tile_count,
                                          limits, rng ) );
   if( FD_UNLIKELY( !ctx->pack ) ) FD_LOG_ERR(( "fd_pack_new failed" ));
 
@@ -871,7 +914,9 @@ unprivileged_init( fd_topo_t *      topo,
                                                        FD_MHIST_SECONDS_MAX( PACK, COMPLETE_MICROBLOCK_DURATION_SECONDS  ) ) );
   ctx->metric_state = 0;
   ctx->metric_state_begin = fd_tickcount();
-  memset( ctx->metric_timing, '\0', 16*sizeof(long) );
+  memset( ctx->metric_timing,  '\0', 16*sizeof(long)             );
+  memset( ctx->current_bundle, '\0', sizeof(ctx->current_bundle) );
+  memset( ctx->blk_engine_cfg, '\0', sizeof(ctx->blk_engine_cfg) );
 
   FD_LOG_INFO(( "packing microblocks of at most %lu transactions to %lu bank tiles", EFFECTIVE_TXN_PER_MICROBLOCK, tile->pack.bank_tile_count ));
 
