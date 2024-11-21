@@ -61,6 +61,11 @@ static volatile ulong * fd_shred_version;
 #define MAP_T        fd_contact_info_elem_t
 #include "../../../../util/tmpl/fd_map_giant.c"
 
+struct fd_gossip_tile_metrics {
+  ulong malformed_packets;
+};
+typedef struct fd_gossip_tile_metrics fd_gossip_tile_metrics_t; 
+
 struct fd_gossip_tile_ctx {
   fd_gossip_t * gossip;
   fd_gossip_config_t gossip_config;
@@ -182,6 +187,9 @@ struct fd_gossip_tile_ctx {
   long  restart_last_vote_push_time;
   ulong restart_last_vote_msg_sz;
   uchar restart_last_vote_msg [ LAST_VOTED_FORK_MAX_MSG_BYTES ];
+
+  /* Metrics */
+  fd_gossip_tile_metrics_t metrics;
 };
 typedef struct fd_gossip_tile_ctx fd_gossip_tile_ctx_t;
 
@@ -930,6 +938,11 @@ populate_allowed_fds( fd_topo_t const *      topo,
   return out_cnt;
 }
 
+static inline void
+metrics_write( fd_gossip_tile_ctx_t * ctx ) {
+  FD_MCNT_SET( GOSSIP_TILE, MALFORMED_PACKETS, ctx->metrics.malformed_packets );
+}
+
 #define STEM_BURST (1UL)
 
 #define STEM_CALLBACK_CONTEXT_TYPE  fd_gossip_tile_ctx_t
@@ -940,6 +953,7 @@ populate_allowed_fds( fd_topo_t const *      topo,
 #define STEM_CALLBACK_BEFORE_FRAG         before_frag
 #define STEM_CALLBACK_DURING_FRAG         during_frag
 #define STEM_CALLBACK_AFTER_FRAG          after_frag
+#define STEM_CALLBACK_METRICS_WRITE       metrics_write
 
 #include "../../../../disco/stem/fd_stem.c"
 
