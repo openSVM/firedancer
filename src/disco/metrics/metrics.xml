@@ -417,4 +417,8 @@ metric introduced.
   <counter name="SnapshotStatus" enum="SnapshotStatus" summary="The snapshot and incremental snapshot progress" />
 </group>
 
+<group name="GossipTile" tile="gossip" full="true">
+  <counter name="MalformedPackets" summary="Number of packets we failed to parse" />
+</group>
+
 </metrics>
