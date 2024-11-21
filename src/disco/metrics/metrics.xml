@@ -418,7 +418,19 @@ metric introduced.
 </group>
 
 <group name="GossipTile" tile="gossip" full="true">
-  <counter name="MalformedPackets" summary="Number of packets we failed to parse" />
+  <gauge name="TimeSinceLastCrdsPushContactInfoPublish" summary="Time since last CRDS Push ContactInfo message publish" />
+  <counter name="MismatchedContactInfoShredVersion" summary="Mismatched Contact Info Shred Version" />
+  <counter name="IPv6ContactInfoTVUAddress" summary="IPv6 Contact Info TVU Address" />
+  <counter name="ZeroIPv4ContactInfoTVUAddress" summary="Zero IPv4 TVU Address" />
+  <counter name="IPv6ContactInfoRepairAddress" summary="IPv6 Contact Info Repair Address" />
+  <counter name="ZeroContactInfoIPv4RepairAddress" summary="Zero IPv4 Repair Address" />
+  <counter name="IPv6ContactInfoTPUVoteAddress" summary="IPv6 Contact Info TPU Vote Address" />
+  <counter name="ZeroContactInfoIPv4TPUVoteAddress" summary="Zero IPv4 TPU Vote Address" />
+  <gauge name="TVUPeersCount" summary="Number of TVU Peers" />
+  <gauge name="RepairPeersCount" summary="Number of Repair Peers" />
+  <gauge name="VoterPeersCount" summary="Number of Voter Peers" />
+  <gauge name="TimeSinceCrdsPushLastRestartVotedForkPublish" summary="Time since last CRDS Push LastRestartVotedFork message publish" />
+  <counter name="ShredVersionZero" summary="Shred version zero" />
 </group>
 
 </metrics>

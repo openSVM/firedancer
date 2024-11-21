@@ -62,9 +62,22 @@ static volatile ulong * fd_shred_version;
 #include "../../../../util/tmpl/fd_map_giant.c"
 
 struct fd_gossip_tile_metrics {
-  ulong malformed_packets;
+  ulong time_since_last_crds_push_contact_info_publish;
+  ulong mismatched_contact_info_shred_version;
+  ulong ipv6_contact_info_tvu_address;
+  ulong zero_ipv4_contact_info_tvu_address;
+  ulong ipv6_contact_info_repair_address;
+  ulong zero_contact_info_ipv4_repair_address;
+  ulong ipv6_contact_info_tpu_vote_address;
+  ulong zero_contact_info_ipv4_tpu_vote_address;
+  ulong tvu_peers_count;
+  ulong repair_peers_count;
+  ulong voter_peers_count;
+  ulong time_since_crds_push_last_restart_voted_fork_publish;
+  ulong shred_version_zero;
 };
 typedef struct fd_gossip_tile_metrics fd_gossip_tile_metrics_t; 
+#define FD_GOSSIP_TILE_METRICS_FOOTPRINT ( sizeof( fd_gossip_tile_metrics_t ) )
 
 struct fd_gossip_tile_ctx {
   fd_gossip_t * gossip;
@@ -552,6 +565,9 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
 
   long now = fd_gossip_gettime( ctx->gossip );
   if( ( now - ctx->last_shred_dest_push_time )>CONTACT_INFO_PUBLISH_TIME_NS ) {
+
+    ctx->metrics.time_since_last_crds_push_contact_info_publish = (ulong)(now - ctx->last_shred_dest_push_time);
+
     ctx->last_shred_dest_push_time = now;
 
     ulong tvu_peer_cnt = 0;
@@ -568,16 +584,19 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
       fd_contact_info_elem_t const * ele = fd_contact_info_table_iter_ele_const( ctx->contact_info_table, iter );
 
       if( ele->contact_info.shred_version!=fd_gossip_get_shred_version( ctx->gossip ) ) {
+        ctx->metrics.mismatched_contact_info_shred_version += 1UL;
         continue;
       }
 
       {
         if( !fd_gossip_ip_addr_is_ip4( &ele->contact_info.tvu.addr ) ) {
+          ctx->metrics.ipv6_contact_info_tvu_address += 1UL;
           continue;
         }
 
         // TODO: add a consistency check function for IP addresses
         if( ele->contact_info.tvu.addr.inner.ip4==0 ) {
+          ctx->metrics.zero_ipv4_contact_info_tvu_address += 1UL;
           continue;
         }
 
@@ -590,11 +609,13 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
 
       {
         if( !fd_gossip_ip_addr_is_ip4( &ele->contact_info.repair.addr ) ) {
+          ctx->metrics.ipv6_contact_info_repair_address += 1UL;
           continue;
         }
 
         // TODO: add a consistency check function for IP addresses
         if( ele->contact_info.serve_repair.addr.inner.ip4 == 0 ) {
+          ctx->metrics.zero_contact_info_ipv4_repair_address += 1UL;
           continue;
         }
 
@@ -607,11 +628,13 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
 
       {
         if( !fd_gossip_ip_addr_is_ip4( &ele->contact_info.tpu_vote.addr ) ) {
+          ctx->metrics.ipv6_contact_info_tpu_vote_address += 1UL;
           continue;
         }
 
         // TODO: add a consistency check function for IP addresses
         if( ele->contact_info.tpu_vote.addr.inner.ip4 == 0 ) {
+          ctx->metrics.zero_contact_info_ipv4_tpu_vote_address += 1UL;
           continue;
         }
 
@@ -622,6 +645,10 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
         voter_peers_cnt++;
       }
     }
+
+    ctx->metrics.tvu_peers_count = tvu_peer_cnt;
+    ctx->metrics.repair_peers_count = repair_peers_cnt;
+    ctx->metrics.voter_peers_count = voter_peers_cnt;
 
     ulong tspub = fd_frag_meta_ts_comp( fd_tickcount() );
 
@@ -656,6 +683,8 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
   }
 
   if( FD_UNLIKELY(( ctx->restart_last_vote_msg_sz!=0 )&&( ctx->restart_last_vote_push_time+LAST_VOTED_FORK_PUBLISH_PERIOD_NS<now )) ) {
+    ctx->metrics.time_since_crds_push_last_restart_voted_fork_publish = (ulong)(now - ctx->restart_last_vote_push_time);
+    // METRIC: time since last restart vote message publish
     ctx->restart_last_vote_push_time = now;
     fd_crds_data_t restart_last_vote_msg;
     restart_last_vote_msg.discriminant = fd_crds_data_enum_restart_last_voted_fork_slots;
@@ -671,12 +700,16 @@ after_credit( fd_gossip_tile_ctx_t * ctx,
                     restart_last_vote_msg.inner.restart_last_voted_fork_slots.last_voted_slot,
                     FD_BASE58_ENC_32_ALLOCA( &restart_last_vote_msg.inner.restart_last_voted_fork_slots.last_voted_hash ),
                     restart_last_vote_msg.inner.restart_last_voted_fork_slots.shred_version ));
+
+    // FIXME: why the return here? shouldn't this be removed?
     return;
   }
 
   ushort shred_version = fd_gossip_get_shred_version( ctx->gossip );
   if( shred_version!=0U ) {
     *fd_shred_version = shred_version;
+  } else {
+    ctx->metrics.shred_version_zero += 1UL;
   }
   fd_gossip_continue( ctx->gossip );
 }
@@ -907,6 +940,9 @@ unprivileged_init( fd_topo_t *      topo,
 
   fd_shred_version = fd_fseq_join( fd_topo_obj_laddr( topo, poh_shred_obj_id ) );
   FD_TEST( fd_shred_version );
+
+  /* Initialize metrics to zero */
+  memset( &ctx->metrics, 0, FD_GOSSIP_TILE_METRICS_FOOTPRINT );
 }
 
 static ulong
@@ -940,7 +976,19 @@ populate_allowed_fds( fd_topo_t const *      topo,
 
 static inline void
 metrics_write( fd_gossip_tile_ctx_t * ctx ) {
-  FD_MCNT_SET( GOSSIP_TILE, MALFORMED_PACKETS, ctx->metrics.malformed_packets );
+  FD_MGAUGE_SET( GOSSIP_TILE, TIME_SINCE_LAST_CRDS_PUSH_CONTACT_INFO_PUBLISH, ctx->metrics.time_since_last_crds_push_contact_info_publish );
+  FD_MCNT_SET( GOSSIP_TILE, MISMATCHED_CONTACT_INFO_SHRED_VERSION, ctx->metrics.mismatched_contact_info_shred_version );
+  FD_MCNT_SET( GOSSIP_TILE, I_PV6_CONTACT_INFO_T_V_U_ADDRESS, ctx->metrics.ipv6_contact_info_tvu_address );
+  FD_MCNT_SET( GOSSIP_TILE, ZERO_I_PV4_CONTACT_INFO_T_V_U_ADDRESS, ctx->metrics.zero_ipv4_contact_info_tvu_address );
+  FD_MCNT_SET( GOSSIP_TILE, I_PV6_CONTACT_INFO_REPAIR_ADDRESS, ctx->metrics.ipv6_contact_info_repair_address );
+  FD_MCNT_SET( GOSSIP_TILE, ZERO_CONTACT_INFO_I_PV4_REPAIR_ADDRESS, ctx->metrics.zero_contact_info_ipv4_repair_address );
+  FD_MCNT_SET( GOSSIP_TILE, I_PV6_CONTACT_INFO_T_P_U_VOTE_ADDRESS, ctx->metrics.ipv6_contact_info_tpu_vote_address );
+  FD_MCNT_SET( GOSSIP_TILE, ZERO_CONTACT_INFO_I_PV4_T_P_U_VOTE_ADDRESS, ctx->metrics.zero_contact_info_ipv4_tpu_vote_address );
+  FD_MGAUGE_SET( GOSSIP_TILE, T_V_U_PEERS_COUNT, ctx->metrics.tvu_peers_count );
+  FD_MGAUGE_SET( GOSSIP_TILE, REPAIR_PEERS_COUNT, ctx->metrics.repair_peers_count );
+  FD_MGAUGE_SET( GOSSIP_TILE, VOTER_PEERS_COUNT, ctx->metrics.voter_peers_count );
+  FD_MGAUGE_SET( GOSSIP_TILE, TIME_SINCE_CRDS_PUSH_LAST_RESTART_VOTED_FORK_PUBLISH, ctx->metrics.time_since_crds_push_last_restart_voted_fork_publish );
+  FD_MCNT_SET( GOSSIP_TILE, SHRED_VERSION_ZERO, ctx->metrics.shred_version_zero );
 }
 
 #define STEM_BURST (1UL)
