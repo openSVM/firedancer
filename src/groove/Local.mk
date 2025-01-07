@@ -1,0 +1,5 @@
+$(call make-lib,fd_groove)
+$(call add-hdrs,fd_groove_base.h fd_groove_meta.h fd_groove.h)
+$(call add-objs,fd_groove_base fd_groove_meta,fd_groove)
+$(call make-unit-test,test_groove_base,test_groove_base,fd_groove fd_util)
+$(call run-unit-test,test_groove_base)
