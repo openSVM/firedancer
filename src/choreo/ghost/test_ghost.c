@@ -50,6 +50,7 @@ mock_epoch( fd_wksp_t * wksp, ulong total_stake, ulong voter_cnt, ... ) {
               |
             slot 6
 */
+
 void
 test_ghost_simple( fd_wksp_t * wksp ) {
   ulong  node_max = 8;
@@ -76,11 +77,20 @@ test_ghost_simple( fd_wksp_t * wksp ) {
   fd_epoch_t * epoch = mock_epoch( wksp, 10, 1, key, 1 );
   fd_voter_t * voter = fd_epoch_voters_query( fd_epoch_voters( epoch ), key, NULL );
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
   fd_ghost_replay_vote( ghost, voter, 2 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  FD_TEST( fd_ghost_query( ghost, 2 )->replay_stake == 1 );
+  FD_TEST( fd_ghost_query( ghost, 0 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 1 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 2 )->weight == 1 );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
   fd_ghost_replay_vote( ghost, voter, 3 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  FD_TEST( fd_ghost_query( ghost, 3 )->replay_stake == 1 );
+  FD_TEST( fd_ghost_query( ghost, 2 )->weight == 0 );
+  FD_TEST( fd_ghost_query( ghost, 0 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 1 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 3 )->weight == 1 );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
 
   fd_wksp_free_laddr( fd_epoch_delete( fd_epoch_leave( epoch ) ) );
   fd_wksp_free_laddr( fd_ghost_delete( fd_ghost_leave( ghost ) ) );
@@ -104,6 +114,7 @@ test_ghost_simple( fd_wksp_t * wksp ) {
            |
          slot 4
 */
+
 void
 test_ghost_publish_left( fd_wksp_t * wksp ) {
   ulong  node_max = 8;
@@ -133,7 +144,7 @@ test_ghost_publish_left( fd_wksp_t * wksp ) {
   fd_voter_t * v1    = fd_epoch_voters_query( fd_epoch_voters( epoch ), pk1, NULL );
 
   fd_ghost_replay_vote( ghost, v1, 2 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
   FD_TEST( !fd_ghost_verify( ghost ) );
 
   fd_ghost_replay_vote( ghost, v1, 3 );
@@ -141,24 +152,15 @@ test_ghost_publish_left( fd_wksp_t * wksp ) {
   FD_TEST( node2 );
   FD_TEST( !fd_ghost_verify( ghost ) );
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
   fd_ghost_publish( ghost, 2 );
   fd_ghost_node_t const * root = fd_ghost_root( ghost );
   FD_TEST( root->slot == 2 );
-
-  fd_ghost_node_map_t * node_map = fd_ghost_node_map( ghost );
-  for( fd_ghost_node_map_iter_t iter = fd_ghost_node_map_iter_init( node_map, node_pool );
-       !fd_ghost_node_map_iter_done( iter, node_map, node_pool );
-       iter = fd_ghost_node_map_iter_next( iter, node_map, node_pool ) ) {
-    fd_ghost_node_t const * node = fd_ghost_node_map_iter_ele( iter, node_map, node_pool );
-    FD_LOG_NOTICE(("slot: %lu", node->slot));
-  }
-
   FD_TEST( !fd_ghost_verify( ghost ) );
 
   FD_TEST( fd_ghost_node_pool_ele( node_pool, root->child_idx )->slot == 4 );
   FD_TEST( fd_ghost_node_pool_free( node_pool ) == node_max - 2 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
 
   fd_wksp_free_laddr( mem );
 }
@@ -183,6 +185,7 @@ test_ghost_publish_left( fd_wksp_t * wksp ) {
            |
          slot 6
 */
+
 void
 test_ghost_publish_right( fd_wksp_t * wksp ) {
   ulong  node_max = 8;
@@ -219,7 +222,7 @@ test_ghost_publish_right( fd_wksp_t * wksp ) {
   fd_ghost_node_t const * node3 = fd_ghost_query( ghost, 3 );
   FD_TEST( node3 );
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
   fd_ghost_publish( ghost, 3 );
   FD_TEST( !fd_ghost_verify( ghost ) );
 
@@ -228,7 +231,7 @@ test_ghost_publish_right( fd_wksp_t * wksp ) {
   FD_TEST( fd_ghost_node_pool_ele( node_pool, root->child_idx )->slot == 5 );
   FD_TEST( fd_ghost_child( ghost, fd_ghost_child( ghost, root ) )->slot == 6 );
   FD_TEST( fd_ghost_node_pool_free( node_pool ) == node_max - 3 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
 
   fd_wksp_free_laddr( mem );
 }
@@ -257,8 +260,7 @@ test_ghost_gca( fd_wksp_t * wksp ) {
   INSERT( 6, 5 );
   FD_TEST( !fd_ghost_verify( ghost ) );
 
-  fd_epoch_t * epoch = mock_epoch( wksp, 0, 0 );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, 0, fd_ghost_root( ghost ) );
 
   FD_TEST( fd_ghost_gca( ghost, 0, 0 )->slot == 0 );
 
@@ -310,8 +312,6 @@ test_ghost_print( fd_wksp_t * wksp ) {
   ulong parent_slots[node_max];
   ulong i = 0;
 
-  fd_epoch_t * epoch = mock_epoch( wksp, 300, 0 );
-
   fd_ghost_init( ghost, 268538758 );
   INSERT( 268538759, 268538758 );
   INSERT( 268538760, 268538759 );
@@ -337,8 +337,7 @@ test_ghost_print( fd_wksp_t * wksp ) {
   node->weight = 10;
   FD_TEST( !fd_ghost_verify( ghost ) );
 
-  fd_ghost_node_t const * grandparent = fd_ghost_parent( ghost, fd_ghost_parent( ghost, fd_ghost_query( ghost, 268538760 ) ) );
-  fd_ghost_print( ghost, epoch, grandparent );
+  // fd_ghost_print( ghost, 300, fd_ghost_parent( ghost, fd_ghost_parent( ghost, fd_ghost_query( ghost, 268538760 ) ) ) );
 
   fd_wksp_free_laddr( mem );
 }
@@ -389,7 +388,7 @@ test_ghost_head( fd_wksp_t * wksp ){
   fd_ghost_node_t const * head2 = fd_ghost_head( ghost, fd_ghost_root( ghost ) );
   FD_TEST( head2->slot == 12 );
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
 
   fd_wksp_free_laddr( mem );
 }
@@ -406,7 +405,6 @@ void test_ghost_vote_leaves( fd_wksp_t * wksp ){
   fd_ghost_t * ghost = fd_ghost_join( fd_ghost_new( mem, 0UL, node_max ) );
 
   fd_ghost_init( ghost, 0 );
-  fd_epoch_t * epoch = mock_epoch( wksp, 40, 0 );
 
   /* make a full binary tree */
   for( ulong i = 1; i < node_max - 1; i++){
@@ -421,7 +419,7 @@ void test_ghost_vote_leaves( fd_wksp_t * wksp ){
     v.replay_vote = i;
   }
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, 40, fd_ghost_root( ghost ) );
 
   ulong path[d];
   ulong leaf = node_max - 2;
@@ -464,7 +462,7 @@ void test_ghost_vote_leaves( fd_wksp_t * wksp ){
   }
 
   FD_TEST( !fd_ghost_verify( ghost ) );
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, epoch->total_stake, fd_ghost_root( ghost ) );
 }
 
 void
@@ -477,10 +475,7 @@ test_ghost_head_full_tree( fd_wksp_t * wksp ){
   FD_TEST( mem );
   fd_ghost_t * ghost = fd_ghost_join( fd_ghost_new( mem, 0UL, node_max ) );
   
-  fd_epoch_t * epoch = mock_epoch( wksp, 120, 0 );
-  
   fd_ghost_init( ghost, 0 );
-  FD_LOG_NOTICE(( "ghost node max: %lu", fd_ghost_node_pool_max( fd_ghost_node_pool( ghost ) ) ));
 
   for ( ulong i = 1; i < node_max - 1; i++ ) {
     fd_ghost_insert( ghost, (i-1)/2, i );
@@ -495,10 +490,8 @@ test_ghost_head_full_tree( fd_wksp_t * wksp ){
 
   FD_TEST( !fd_ghost_verify( ghost ) );
 
-  fd_ghost_print( ghost, epoch, fd_ghost_root( ghost ) );
+  // fd_ghost_print( ghost, 120, fd_ghost_root( ghost ) );
   fd_ghost_node_t const * head = fd_ghost_head( ghost, fd_ghost_root( ghost ) );
-
-  FD_LOG_NOTICE(( "head slot %lu", head->slot ));
 
   // head will always be rightmost node in this complete binary tree
 
@@ -548,22 +541,73 @@ test_rooted_vote( fd_wksp_t * wksp ){
   FD_TEST( !fd_ghost_verify( ghost ) );
 }
 
+void
+test_ghost_xepoch_replay_vote( fd_wksp_t * wksp ) {
+  ulong  node_max = 8;
+
+  void * mem = fd_wksp_alloc_laddr( wksp, fd_ghost_align(), fd_ghost_footprint( node_max ), 1UL );
+  FD_TEST( mem );
+
+  fd_ghost_t *      ghost     = fd_ghost_join( fd_ghost_new( mem, 0UL, node_max ) );
+  fd_ghost_node_t * node_pool = fd_wksp_laddr_fast( wksp, ghost->node_pool_gaddr );
+
+  ulong slots[fd_ghost_node_pool_max( node_pool )];
+  ulong parent_slots[fd_ghost_node_pool_max( node_pool )];
+  ulong i = 0;
+
+  fd_ghost_init( ghost, 0 );
+  INSERT( 1, 0 );
+  INSERT( 2, 1 );
+  INSERT( 3, 1 );
+  INSERT( 4, 2 );
+  INSERT( 5, 3 );
+  INSERT( 6, 5 );
+  FD_TEST( !fd_ghost_verify( ghost ) );
+
+  fd_pubkey_t  key        = { .key = { 1 } };
+  fd_epoch_t * prev_epoch = mock_epoch( wksp, 10, 1, key, 2 );
+  fd_voter_t * prev_voter = fd_epoch_voters_query( fd_epoch_voters( prev_epoch ), key, NULL );
+  fd_epoch_t * curr_epoch = mock_epoch( wksp, 10, 1, key, 1 );
+  fd_voter_t * curr_voter = fd_epoch_voters_query( fd_epoch_voters( curr_epoch ), key, NULL );
+  fd_epoch_t * next_epoch = mock_epoch( wksp, 10, 1, key, 3 );
+  fd_voter_t * next_voter = fd_epoch_voters_query( fd_epoch_voters( next_epoch ), key, NULL );
+
+  fd_ghost_replay_vote( ghost, curr_voter, 2 );
+  // fd_ghost_print( ghost, prev_epoch->total_stake, fd_ghost_root( ghost ) );
+  FD_TEST( fd_ghost_query( ghost, 2 )->replay_stake == 1 );
+  FD_TEST( fd_ghost_query( ghost, 0 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 1 )->weight == 1 );
+  FD_TEST( fd_ghost_query( ghost, 2 )->weight == 1 );
+
+  fd_ghost_prev_epoch_replay_vote( ghost, curr_voter, prev_voter, 3 );
+  // fd_ghost_print( ghost, prev_epoch->total_stake, fd_ghost_root( ghost ) );
+  FD_TEST( fd_ghost_query( ghost, 2 )->weight == 0 );
+  FD_TEST( fd_ghost_query( ghost, 3 )->replay_stake == 2 );
+  FD_TEST( fd_ghost_query( ghost, 0 )->weight == 2 );
+  FD_TEST( fd_ghost_query( ghost, 1 )->weight == 2 );
+  FD_TEST( fd_ghost_query( ghost, 3 )->weight == 2 );
+
+  fd_ghost_next_epoch_replay_vote( ghost, curr_voter, next_voter, 4 );
+  // fd_ghost_print( ghost, prev_epoch->total_stake, fd_ghost_root( ghost ) );
+  FD_TEST( fd_ghost_query( ghost, 3 )->weight == 0 );
+  FD_TEST( fd_ghost_query( ghost, 4 )->replay_stake == 3 );
+  FD_TEST( fd_ghost_query( ghost, 0 )->weight == 3 );
+  FD_TEST( fd_ghost_query( ghost, 1 )->weight == 3 );
+  FD_TEST( fd_ghost_query( ghost, 2 )->weight == 3 );
+  FD_TEST( fd_ghost_query( ghost, 4 )->weight == 3 );
+
+  fd_wksp_free_laddr( fd_epoch_delete( fd_epoch_leave( prev_epoch ) ) );
+  fd_wksp_free_laddr( fd_ghost_delete( fd_ghost_leave( ghost ) ) );
+}
+
 int
 main( int argc, char ** argv ) {
   fd_boot( &argc, &argv );
 
-  ulong  page_cnt = 1;
-  char * _page_sz = "gigantic";
-  ulong  numa_idx = fd_shmem_numa_idx( 0 );
-  FD_LOG_NOTICE( ( "Creating workspace (--page-cnt %lu, --page-sz %s, --numa-idx %lu)",
-                   page_cnt,
-                   _page_sz,
-                   numa_idx ) );
-  fd_wksp_t * wksp = fd_wksp_new_anonymous( fd_cstr_to_shmem_page_sz( _page_sz ),
-                                            page_cnt,
-                                            fd_shmem_cpu_idx( numa_idx ),
-                                            "wksp",
-                                            0UL );
+  ulong       page_cnt = 1;
+  char *      _page_sz = "gigantic";
+  ulong       numa_idx = fd_shmem_numa_idx( 0 );
+  fd_wksp_t * wksp     = fd_wksp_new_anonymous( fd_cstr_to_shmem_page_sz( _page_sz ), page_cnt, fd_shmem_cpu_idx( numa_idx ), "wksp", 0UL );
   FD_TEST( wksp );
 
   test_ghost_print( wksp );
