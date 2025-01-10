@@ -881,8 +881,6 @@ fd_pack_insert_txn_fini( fd_pack_t  * pack,
   if( FD_UNLIKELY( expires_at<pack->expire_before                          ) ) REJECT( EXPIRED          );
   /*           ... that use an account that violates bundle rules */
   if( FD_UNLIKELY( bundle_blacklist & 1                                    ) ) REJECT( BUNDLE_BLACKLIST );
-  /*           ... that require packing as a bundle. TODO: Handle bundles */
-  if( FD_UNLIKELY( txne->bundle                                            ) ) REJECT( BUNDLE_BLACKLIST );
 
 
   int replaces = 0;

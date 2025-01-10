@@ -78,7 +78,6 @@ typedef struct fd_txn_p fd_txn_p_t;
 /* fd_txn_e_t: An fd_txn_p_t with expanded address lookup tables */
 struct __attribute__((aligned(64))) fd_txn_e {
    fd_txn_p_t     txnp[1];
-   int            bundle;
    fd_acct_addr_t alt_accts[FD_TXN_ACCT_ADDR_MAX]; /* The used account is in the fd_txn_t*/
 };
 typedef struct fd_txn_e fd_txn_e_t;
