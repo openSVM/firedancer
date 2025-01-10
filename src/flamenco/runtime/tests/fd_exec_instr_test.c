@@ -1171,6 +1171,7 @@ _block_context_create_and_exec( fd_exec_instr_test_runner_t *        runner,
   // since spad usage is 0.
   assert( fd_spad_mem_used( spad )==0UL );
   fd_spad_pop( spad );
+  fd_runtime_block_pre_execute_process_new_epoch( slot_ctx );
   int res = fd_runtime_block_execute_tpool( slot_ctx, NULL, block_info, tpool, &spad, 1UL );
   fd_spad_push( spad );
 

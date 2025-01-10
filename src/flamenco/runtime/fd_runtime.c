@@ -4004,7 +4004,7 @@ fd_runtime_block_execute_tpool( fd_exec_slot_ctx_t *    slot_ctx,
   } FD_SCRATCH_SCOPE_END;
 }
 
-int
+void
 fd_runtime_block_pre_execute_process_new_epoch( fd_exec_slot_ctx_t * slot_ctx ) {
   /* Update block height. */
   slot_ctx->slot_bank.block_height += 1UL;
@@ -4035,8 +4035,6 @@ fd_runtime_block_pre_execute_process_new_epoch( fd_exec_slot_ctx_t * slot_ctx ) 
     fd_distribute_partitioned_epoch_rewards( slot_ctx );
     fd_funk_end_write( slot_ctx->acc_mgr->funk );
   }
-
-  return FD_RUNTIME_EXECUTE_SUCCESS;
 }
 
 int
@@ -4088,9 +4086,7 @@ fd_runtime_block_eval_tpool( fd_exec_slot_ctx_t * slot_ctx,
     }
     fd_blockstore_end_read( slot_ctx->blockstore );
 
-    if( FD_UNLIKELY( (ret = fd_runtime_block_pre_execute_process_new_epoch( slot_ctx )) != FD_RUNTIME_EXECUTE_SUCCESS ) ) {
-      break;
-    }
+    fd_runtime_block_pre_execute_process_new_epoch( slot_ctx );
 
     fd_blockstore_start_read( slot_ctx->blockstore );
     fd_block_t * block = fd_blockstore_block_query( slot_ctx->blockstore, slot );

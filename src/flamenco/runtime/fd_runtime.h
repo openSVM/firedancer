@@ -385,7 +385,7 @@ fd_runtime_is_epoch_boundary( fd_epoch_bank_t * epoch_bank,
    that we modify when processing a new epoch need to be hashed into
    the bank hash.
  */
-int
+void
 fd_runtime_block_pre_execute_process_new_epoch( fd_exec_slot_ctx_t * slot_ctx );
 
 /* Debugging Tools ************************************************************/
