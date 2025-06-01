@@ -152,6 +152,11 @@ The phased approach outlined in this review provides a clear path from the curre
 ### Phase 4: Strategic Roadmap
 [**phase4-strategic-roadmap.md**](phase4-strategic-roadmap.md) - Implementation timeline and GitHub issue breakdown
 
+### Implementation Plans
+[**development-plan.md**](development-plan.md) - Comprehensive technical implementation roadmap with coding standards, testing strategies, and development workflows
+
+[**community-engagement-plan.md**](community-engagement-plan.md) - Community building strategy including contributor onboarding, documentation, communication channels, and governance frameworks
+
 ### Project Overview
 [**PROJECT_OVERVIEW.md**](PROJECT_OVERVIEW.md) - Complete project context and technical overview
 
