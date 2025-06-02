@@ -12,7 +12,7 @@ module sha512_block #(
     input wire    [DATA_W-1:0]  i_data,
     input wire    [CTRL_W-1:0]  i_ctrl,
     input wire    [MSGI_W-1:0]  i_msgi,
-   
+
     output logic                o_valid,
     output logic  [MSGI_W-1:0]  o_msgi,
     output logic  [HASH_W-1:0]  o_hash,
@@ -144,7 +144,7 @@ logic [H_WD_N-1:0][WORD_W-1:0] InitVector = '{
     Constants[78] = 64'h5fcb6fab3ad6faec
     Constants[79] = 64'h6c44198c4a475817
 */
-logic [WORD_W-1:0] Constants [N_ROUNDS] = '{ 
+logic [WORD_W-1:0] Constants [N_ROUNDS] = '{
   64'h428a2f98d728ae22, 64'h7137449123ef65cd, /*  K0,  K1 */
   64'hb5c0fbcfec4d3b2f, 64'he9b5dba58189dbbc, /*  K2,  K3 */
   64'h3956c25bf348b538, 64'h59f111f1b605d019, /*  K4,  K5 */
@@ -290,7 +290,7 @@ always_ff@(posedge clk) begin
     c94_h_ram_rd_addr   <= (c93_rcount_p<RCOUNT_N) ? c93_rcount_p[H_RAM_ADDR_W-1:0] : c93_rcount_m[H_RAM_ADDR_W-1:0];
 
     c97_p_hash          <= c96_h_ram_rd_data;
-    
+
     c98_mux             <= piped_isfirst[CYCLES_BLOCK-1-2] ? initvec : c97_p_hash;
 
     c99_o_valid         <= piped_islast[CYCLES_BLOCK-1-1];
@@ -326,7 +326,7 @@ always_ff@(posedge clk) begin
         piped_islast    <= '0;
     end else begin
         // It is preferred to use the registered version of:
-        // c01_i_ctrl and c01_i_valid, assumming that none 
+        // c01_i_ctrl and c01_i_valid, assumming that none
         // of the pipes is ever queried for bit [0]. Otherwise
         // {p[CYCLES_BLOCK-1:0], c00_i_ctrl[...] & c00_i_valid}
         piped_isfirst   <= { piped_isfirst[CYCLES_BLOCK-1:1], c01_i_ctrl[CTRL_BIT_FIRST] & c01_i_valid, 1'b0 };
@@ -346,11 +346,11 @@ end
 
 
 always_comb begin
-    p_hash[0] = c03_p_hash;   
+    p_hash[0] = c03_p_hash;
     for (i = 1; i < N_ROUNDS; i ++) begin
         p_hash[i] = t_hash[i-1];
     end
-end 
+end
 
 
 sha512_msgseq #(
@@ -359,12 +359,12 @@ sha512_msgseq #(
     .ROUNDS     ( N_ROUNDS  )
 ) sha512_msgseq_inst (
     /* FIXME: CYCLES_MSGSEQ must match CYCLES_ROUND
-              c02_i_data is for CYCLES_MSGSEQ=1 
+              c02_i_data is for CYCLES_MSGSEQ=1
               c01_i_data is for CYCLES_MSGSEQ=2
               if  CYCLES_MSGSEQ > 2, then add register
                 stages before feeding the first round !!
                 (alternative solutions may exist though) */
-    .i_data     ( c02_i_data ), 
+    .i_data     ( c02_i_data ),
     .o_word     ( t_word     ),
 
     .clk        ( clk ),
@@ -387,7 +387,7 @@ generate
           .clk        ( clk ),
           .rst        ( rst )
       );
-    end 
+    end
 endgenerate
 
 

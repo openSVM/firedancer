@@ -11,10 +11,10 @@ echo "=================================="
 create_anchor_program() {
     local name="$1"
     echo "Creating Anchor program: $name"
-    
+
     anchor init "$name"
     cd "$name"
-    
+
     # Enhanced program template
     cat > programs/"$name"/src/lib.rs << EOF
 use anchor_lang::prelude::*;
@@ -151,13 +151,13 @@ EOF
 create_nextjs_dapp() {
     local name="$1"
     echo "Creating Next.js dApp: $name"
-    
+
     npx create-solana-dapp "$name" --template nextjs
     cd "$name"
-    
+
     # Add enhanced components
     mkdir -p src/components/ui
-    
+
     cat > src/components/ui/WalletButton.tsx << EOF
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
@@ -186,10 +186,10 @@ EOF
 create_seahorse_program() {
     local name="$1"
     echo "Creating Seahorse (Python) program: $name"
-    
+
     seahorse init "$name"
     cd "$name"
-    
+
     # Enhanced Python program
     cat > programs/"$name"/src/main.py << EOF
 from seahorse.prelude import *
@@ -207,23 +207,23 @@ def initialize(signer: Signer, my_account: Empty[MyAccount], data: u64):
         payer=signer,
         seeds=['my-account', signer]
     )
-    
+
     my_account.data = data
     my_account.authority = signer.key()
-    
+
     print(f'Initialized account with data: {data}')
 
 @instruction
 def update(authority: Signer, my_account: MyAccount, new_data: u64):
     """Update account data"""
     assert my_account.authority == authority.key(), "Unauthorized"
-    
+
     old_data = my_account.data
     my_account.data = new_data
-    
+
     print(f'Updated data from {old_data} to {new_data}')
 
-@instruction  
+@instruction
 def get_data(my_account: MyAccount) -> u64:
     """Get current account data"""
     return my_account.data
@@ -237,10 +237,10 @@ EOF
 create_native_program() {
     local name="$1"
     echo "Creating native Rust program: $name"
-    
+
     cargo new --lib "$name"
     cd "$name"
-    
+
     # Add Solana dependencies
     cat > Cargo.toml << EOF
 [package]
@@ -305,7 +305,7 @@ pub fn process_instruction(
     instruction_data: &[u8],
 ) -> ProgramResult {
     let instruction = MyInstruction::try_from_slice(instruction_data)?;
-    
+
     match instruction {
         MyInstruction::Initialize { data } => {
             process_initialize(program_id, accounts, data)
@@ -349,7 +349,7 @@ fn process_initialize(
     };
 
     account_data.serialize(&mut &mut my_account.data.borrow_mut()[..])?;
-    
+
     msg!("Initialized account with data: {}", data);
     Ok(())
 }
@@ -368,14 +368,14 @@ fn process_update(
     }
 
     let mut account_data = MyAccount::try_from_slice(&my_account.data.borrow())?;
-    
+
     if account_data.authority != *authority.key {
         return Err(ProgramError::InvalidAccountData);
     }
 
     account_data.data = new_data;
     account_data.serialize(&mut &mut my_account.data.borrow_mut()[..])?;
-    
+
     msg!("Updated account data to: {}", new_data);
     Ok(())
 }

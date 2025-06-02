@@ -39,7 +39,7 @@ pub fn example_commands(client: &RpcClient, arc_client: &Arc<RpcClient>, payer: 
     println!("Invoked Program Signature: {:?} - Slot: {:?}", transaction.signatures[0], client.get_slot_with_commitment(CommitmentConfig::processed()).unwrap());
 
     utils::wait_atleast_n_slots(&client, 1);
-    
+
     // Upgrade Program
     let upgrade_program_instructions = instructions::upgrade_program_instructions(&payer, &buffer_account_upgrade, &program_account);
     let transaction = utils::create_message_and_sign(&upgrade_program_instructions, &payer, vec![&payer], client.get_latest_blockhash().unwrap());

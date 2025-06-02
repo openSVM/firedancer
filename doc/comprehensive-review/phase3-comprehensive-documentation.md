@@ -101,7 +101,7 @@ graph TB
     PACK -.-> TILE
     EXEC -.-> TILE
     POH -.-> TILE
-    
+
     TILE -.-> IPC
     TILE -.-> MEM
     TILE -.-> METRICS
@@ -154,15 +154,15 @@ sequenceDiagram
     Client->>QUIC: Transaction
     QUIC->>Verify: Parsed Transaction
     Verify->>Verify: Signature Verification
-    
+
     alt Valid Signature
         Verify->>Dedup: Verified Transaction
         Dedup->>Dedup: Check Duplicates
-        
+
         alt Not Duplicate
             Dedup->>Pack: Unique Transaction
             Pack->>Pack: Schedule for Execution
-            
+
             Note over Pack,Bank: When Leader
             Pack->>Bank: Transaction Bundle
             Bank->>Bank: Execute Transactions
@@ -228,7 +228,7 @@ graph LR
 
 **Key Components:**
 - **Fork Choice**: Tower BFT implementation
-- **Voting**: Validator vote generation and processing  
+- **Voting**: Validator vote generation and processing
 - **Leader Schedule**: Block production scheduling
 
 ### 2.4 Runtime Environment (flamenco)
@@ -254,14 +254,14 @@ erDiagram
         uint64 executable
         uint64 rent_epoch
     }
-    
+
     TRANSACTIONS {
         bytes32 signature PK
         uint64 slot
         bytes transaction_data
         uint32 status
     }
-    
+
     BLOCKS {
         uint64 slot PK
         bytes32 blockhash
@@ -269,14 +269,14 @@ erDiagram
         uint64 height
         uint64 timestamp
     }
-    
+
     SHREDS {
         uint64 slot PK
         uint32 index PK
         bytes data
         uint32 type
     }
-    
+
     BLOCKS ||--o{ TRANSACTIONS : contains
     BLOCKS ||--o{ SHREDS : "split into"
     TRANSACTIONS }o--o{ ACCOUNTS : "modifies"
@@ -297,17 +297,17 @@ graph TB
         A1[Producer]
         A2[Message Cache]
     end
-    
+
     subgraph "Shared Memory"
         SM[Ring Buffer]
         MC[Message Cache]
     end
-    
+
     subgraph "Tile B"
         B1[Consumer]
         B2[Message Cache]
     end
-    
+
     A1 --> A2
     A2 --> SM
     SM --> MC
@@ -337,18 +337,18 @@ graph TB
         ENV[Environment-specific]
         USER[User Override]
     end
-    
+
     BASE --> MACHINE
     MACHINE --> ENV
     ENV --> USER
-    
+
     subgraph "Configuration Categories"
         TILES[Tile Configuration]
         NET[Network Settings]
         PERF[Performance Tuning]
         SEC[Security Settings]
     end
-    
+
     USER --> TILES
     USER --> NET
     USER --> PERF
@@ -385,12 +385,12 @@ graph TB
         T3[Performance Metrics] --> MC
         T4[System Metrics] --> MC
     end
-    
+
     subgraph "Metrics Processing"
         MC --> AGG[Aggregator]
         AGG --> STORE[Storage]
     end
-    
+
     subgraph "Visualization"
         STORE --> DASH[Dashboard]
         STORE --> ALERT[Alerting]
@@ -411,7 +411,7 @@ graph TB
         SYS[System Security]
         HW[Hardware Security]
     end
-    
+
     subgraph "Security Controls"
         APP --> SEC1[Input Validation]
         APP --> SEC2[Memory Safety]
@@ -447,21 +447,21 @@ graph TB
         NET[Network Optimization]
         IO[I/O Optimization]
     end
-    
+
     subgraph "CPU Techniques"
         CPU --> C1[Core Isolation]
         CPU --> C2[SIMD Instructions]
         CPU --> C3[Branch Prediction]
         CPU --> C4[Cache Optimization]
     end
-    
+
     subgraph "Memory Techniques"
         MEM --> M1[Custom Allocators]
         MEM --> M2[Memory Pools]
         MEM --> M3[NUMA Awareness]
         MEM --> M4[Huge Pages]
     end
-    
+
     subgraph "Network Techniques"
         NET --> N1[Zero-copy Networking]
         NET --> N2[Kernel Bypass]
@@ -475,7 +475,7 @@ graph TB
 The tile-based architecture enables horizontal scaling:
 
 1. **Scale verification**: Add more verify tiles for higher TPS
-2. **Scale execution**: Add more bank tiles for complex transactions  
+2. **Scale execution**: Add more bank tiles for complex transactions
 3. **Scale networking**: Add more QUIC tiles for more clients
 4. **Scale storage**: Distribute database across multiple instances
 
@@ -491,13 +491,13 @@ graph TB
         COMP --> LINK[Linking]
         LINK --> BIN[Binaries]
     end
-    
+
     subgraph "Build Configuration"
         MACHINE[Machine Config] --> COMP
         EXTRAS[Build Extras] --> COMP
         TARGET[Target Selection] --> COMP
     end
-    
+
     subgraph "Output Artifacts"
         BIN --> MAIN[Main Programs]
         BIN --> TEST[Test Binaries]
@@ -515,11 +515,11 @@ graph TB
         E2E[End-to-End Tests]
         PERF[Performance Tests]
     end
-    
+
     UNIT --> INTEGRATION
     INTEGRATION --> E2E
     E2E --> PERF
-    
+
     subgraph "Test Types"
         UNIT --> U1[Module Testing]
         UNIT --> U2[Function Testing]

@@ -53,11 +53,11 @@ always_comb begin
     ma = (a&b) ^ (a&c) ^ (b&c);
     ch = (e&f) ^ ((~e)&g);
 
-    ea = {a[28-1:0],a[WORD_W-1:28]} ^ 
+    ea = {a[28-1:0],a[WORD_W-1:28]} ^
          {a[34-1:0],a[WORD_W-1:34]} ^
          {a[39-1:0],a[WORD_W-1:39]};
 
-    ee = {e[14-1:0],e[WORD_W-1:14]} ^ 
+    ee = {e[14-1:0],e[WORD_W-1:14]} ^
          {e[18-1:0],e[WORD_W-1:18]} ^
          {e[41-1:0],e[WORD_W-1:41]};
 

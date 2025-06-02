@@ -76,7 +76,7 @@ for iface in $(ip link show | grep -E "^[0-9]:" | grep -v lo | cut -d: -f2 | tr 
     DRIVER=$(ethtool -i $iface 2>/dev/null | grep driver | cut -d: -f2 | tr -d ' ')
     SPEED=$(ethtool $iface 2>/dev/null | grep Speed | cut -d: -f2 | tr -d ' ')
     echo "Interface: $iface, Driver: $DRIVER, Speed: $SPEED"
-    
+
     # Check for recommended drivers
     case $DRIVER in
         ixgbe|i40e|ice|mlx5_core)
@@ -311,7 +311,7 @@ echo "Optimizing storage..."
 for disk in $(lsblk -dpno NAME | grep -E "sd|nvme"); do
     # Set I/O scheduler for SSDs
     if grep -q 0 /sys/block/$(basename $disk)/queue/rotational 2>/dev/null; then
-        echo none > /sys/block/$(basename $disk)/queue/scheduler 2>/dev/null || 
+        echo none > /sys/block/$(basename $disk)/queue/scheduler 2>/dev/null ||
         echo mq-deadline > /sys/block/$(basename $disk)/queue/scheduler 2>/dev/null
         echo "✅ Set scheduler for SSD: $disk"
     fi
@@ -369,7 +369,7 @@ net.ipv4.tcp_congestion_control = bbr
 net.ipv4.tcp_slow_start_after_idle = 0
 net.ipv4.tcp_tw_reuse = 1
 
-# UDP optimization  
+# UDP optimization
 net.ipv4.udp_rmem_min = 8192
 net.ipv4.udp_wmem_min = 8192
 
@@ -402,19 +402,19 @@ while true; do
     TX_PACKETS=$(cat /sys/class/net/$INTERFACE/statistics/tx_packets)
     RX_DROPPED=$(cat /sys/class/net/$INTERFACE/statistics/rx_dropped)
     TX_DROPPED=$(cat /sys/class/net/$INTERFACE/statistics/tx_dropped)
-    
+
     sleep 1
-    
+
     RX_BYTES_NEW=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
     TX_BYTES_NEW=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
     RX_PACKETS_NEW=$(cat /sys/class/net/$INTERFACE/statistics/rx_packets)
     TX_PACKETS_NEW=$(cat /sys/class/net/$INTERFACE/statistics/tx_packets)
-    
+
     RX_RATE=$(( ($RX_BYTES_NEW - $RX_BYTES) * 8 / 1000000 ))
     TX_RATE=$(( ($TX_BYTES_NEW - $TX_BYTES) * 8 / 1000000 ))
     RX_PPS=$(( $RX_PACKETS_NEW - $RX_PACKETS ))
     TX_PPS=$(( $TX_PACKETS_NEW - $TX_PACKETS ))
-    
+
     printf "\r%s: RX: %4d Mbps (%6d pps) TX: %4d Mbps (%6d pps) Dropped: %d/%d" \
            "$(date +'%H:%M:%S')" $RX_RATE $RX_PPS $TX_RATE $TX_PPS $RX_DROPPED $TX_DROPPED
 done
@@ -565,27 +565,27 @@ CONFIG_FILE="/etc/firedancer/config.toml"
 
 backup_validator() {
     echo "🔄 Starting Firedancer backup..."
-    
+
     mkdir -p $BACKUP_DIR/$(date +%Y%m%d_%H%M%S)
     CURRENT_BACKUP=$BACKUP_DIR/$(date +%Y%m%d_%H%M%S)
-    
+
     # Stop validator for consistent backup
     systemctl stop firedancer
-    
+
     # Backup critical files
     echo "Backing up configuration..."
     cp $CONFIG_FILE $CURRENT_BACKUP/
-    
+
     echo "Backing up keypairs..."
     cp -r /home/firedancer/.ssh $CURRENT_BACKUP/ 2>/dev/null || true
     find /home/firedancer -name "*.json" -exec cp {} $CURRENT_BACKUP/ \;
-    
+
     echo "Backing up ledger snapshot..."
     rsync -av --progress $DATA_DIR/snapshots/ $CURRENT_BACKUP/snapshots/
-    
+
     echo "Backing up accounts database..."
     rsync -av --progress $DATA_DIR/accounts/ $CURRENT_BACKUP/accounts/
-    
+
     # Create backup manifest
     cat > $CURRENT_BACKUP/manifest.txt << EOF
 Backup Date: $(date)
@@ -594,62 +594,62 @@ Firedancer Version: $(./build/native/gcc/bin/fdctl --version)
 Ledger Size: $(du -sh $DATA_DIR/ledger | cut -f1)
 Snapshot Count: $(ls $DATA_DIR/snapshots/*.tar.* 2>/dev/null | wc -l)
 EOF
-    
+
     # Compress backup
     tar -czf $BACKUP_DIR/firedancer_backup_$(date +%Y%m%d_%H%M%S).tar.gz -C $BACKUP_DIR $(basename $CURRENT_BACKUP)
     rm -rf $CURRENT_BACKUP
-    
+
     # Restart validator
     systemctl start firedancer
-    
+
     echo "✅ Backup completed: $BACKUP_DIR/firedancer_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
 }
 
 restore_validator() {
     BACKUP_FILE=$1
-    
+
     if [ -z "$BACKUP_FILE" ]; then
         echo "Usage: restore_validator <backup_file.tar.gz>"
         return 1
     fi
-    
+
     echo "🔄 Restoring Firedancer from backup..."
     echo "⚠️  This will overwrite current configuration and data!"
     read -p "Continue? (y/N): " confirm
-    
+
     if [[ ! $confirm =~ ^[Yy]$ ]]; then
         echo "Restore cancelled"
         return 1
     fi
-    
+
     # Stop validator
     systemctl stop firedancer
-    
+
     # Extract backup
     RESTORE_DIR="/tmp/firedancer_restore_$$"
     mkdir -p $RESTORE_DIR
     tar -xzf $BACKUP_FILE -C $RESTORE_DIR
-    
+
     # Restore files
     BACKUP_CONTENTS=$(ls $RESTORE_DIR)
     echo "Restoring configuration..."
     cp $RESTORE_DIR/$BACKUP_CONTENTS/config.toml $CONFIG_FILE
-    
+
     echo "Restoring keypairs..."
     cp $RESTORE_DIR/$BACKUP_CONTENTS/*.json /home/firedancer/
-    
+
     echo "Restoring snapshots..."
     rsync -av $RESTORE_DIR/$BACKUP_CONTENTS/snapshots/ $DATA_DIR/snapshots/
-    
+
     echo "Restoring accounts..."
     rsync -av $RESTORE_DIR/$BACKUP_CONTENTS/accounts/ $DATA_DIR/accounts/
-    
+
     # Fix permissions
     chown -R firedancer:firedancer /home/firedancer
-    
+
     # Cleanup
     rm -rf $RESTORE_DIR
-    
+
     echo "✅ Restore completed"
     echo "Start validator: systemctl start firedancer"
 }
@@ -661,7 +661,7 @@ setup_backup_cron() {
 0 2 * * * root /usr/local/bin/firedancer-backup.sh backup >/var/log/firedancer-backup.log 2>&1
 0 6 * * 0 root find /backup/firedancer -name "*.tar.gz" -mtime +30 -delete
 EOF
-    
+
     echo "✅ Automated backup scheduled (daily at 2 AM)"
 }
 
@@ -692,7 +692,7 @@ esac
 diagnose_system() {
     echo "🔍 Firedancer System Diagnosis"
     echo "============================="
-    
+
     # Check if Firedancer is running
     if pgrep -f "fdctl run" >/dev/null; then
         echo "✅ Firedancer process is running"
@@ -704,7 +704,7 @@ diagnose_system() {
         echo "   Check logs: journalctl -u firedancer -f"
         return 1
     fi
-    
+
     # Check network connectivity
     echo -e "\nNetwork Connectivity:"
     for endpoint in entrypoint.testnet.solana.com entrypoint.mainnet-beta.solana.com; do
@@ -714,7 +714,7 @@ diagnose_system() {
             echo "❌ $endpoint:8001 unreachable"
         fi
     done
-    
+
     # Check local ports
     echo -e "\nLocal Ports:"
     for port in 8001 8899 7999; do
@@ -724,23 +724,23 @@ diagnose_system() {
             echo "❌ Port $port is not listening"
         fi
     done
-    
+
     # Check system resources
     echo -e "\nSystem Resources:"
     LOAD=$(uptime | awk -F'load average:' '{ print $2 }' | cut -d, -f1 | xargs)
     CPU_COUNT=$(nproc)
     LOAD_PERCENT=$(echo "scale=1; $LOAD / $CPU_COUNT * 100" | bc)
     echo "CPU Load: $LOAD ($LOAD_PERCENT% of $CPU_COUNT cores)"
-    
+
     MEM_USED=$(free | grep Mem | awk '{printf "%.1f", $3/$2 * 100.0}')
     echo "Memory Usage: $MEM_USED%"
-    
+
     DISK_USED=$(df /home/firedancer | tail -1 | awk '{print $5}')
     echo "Disk Usage: $DISK_USED"
-    
+
     # Check for common issues
     echo -e "\nCommon Issues Check:"
-    
+
     # Check for slot lag
     if command -v curl >/dev/null; then
         SLOT_HEIGHT=$(curl -s http://localhost:7999/metrics 2>/dev/null | grep "fd_validator_slot_height" | awk '{print $2}')
@@ -750,7 +750,7 @@ diagnose_system() {
             echo "❌ Cannot access metrics endpoint"
         fi
     fi
-    
+
     # Check for file descriptor limits
     FD_SOFT=$(ulimit -Sn)
     FD_HARD=$(ulimit -Hn)
@@ -759,7 +759,7 @@ diagnose_system() {
     else
         echo "✅ File descriptor limit adequate: $FD_SOFT"
     fi
-    
+
     # Check for huge pages
     HUGEPAGES=$(cat /proc/meminfo | grep HugePages_Total | awk '{print $2}')
     if [ $HUGEPAGES -lt 1024 ]; then
@@ -772,7 +772,7 @@ diagnose_system() {
 fix_common_issues() {
     echo "🔧 Applying Common Fixes"
     echo "======================="
-    
+
     echo "1. Increasing file descriptor limits..."
     cat > /etc/security/limits.d/99-firedancer.conf << 'EOF'
 firedancer soft nofile 65536
@@ -780,60 +780,60 @@ firedancer hard nofile 65536
 root soft nofile 65536
 root hard nofile 65536
 EOF
-    
+
     echo "2. Configuring huge pages..."
     echo 2048 > /proc/sys/vm/nr_hugepages
-    
+
     echo "3. Setting CPU governor to performance..."
     echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null
-    
+
     echo "4. Disabling swap..."
     swapoff -a
-    
+
     echo "5. Optimizing network settings..."
     echo 'net.core.rmem_max = 16777216' >> /etc/sysctl.conf
     echo 'net.core.wmem_max = 16777216' >> /etc/sysctl.conf
     sysctl -p
-    
+
     echo "✅ Common fixes applied. Restart Firedancer to take effect."
 }
 
 collect_debug_info() {
     DEBUG_DIR="/tmp/firedancer-debug-$(date +%Y%m%d_%H%M%S)"
     mkdir -p $DEBUG_DIR
-    
+
     echo "📋 Collecting Debug Information"
     echo "=============================="
-    
+
     # System information
     uname -a > $DEBUG_DIR/system_info.txt
     lscpu > $DEBUG_DIR/cpu_info.txt
     free -h > $DEBUG_DIR/memory_info.txt
     df -h > $DEBUG_DIR/disk_info.txt
     ip addr show > $DEBUG_DIR/network_info.txt
-    
+
     # Firedancer specific
     pstree -p $(pgrep -f "fdctl run" | head -1) > $DEBUG_DIR/process_tree.txt 2>/dev/null
     ss -tuln > $DEBUG_DIR/listening_ports.txt
-    
+
     # Logs
     journalctl -u firedancer --since "1 hour ago" > $DEBUG_DIR/service_logs.txt 2>/dev/null
     dmesg | tail -100 > $DEBUG_DIR/kernel_logs.txt
-    
+
     # Configuration
     cp /etc/firedancer/config.toml $DEBUG_DIR/ 2>/dev/null
-    
+
     # Metrics snapshot
     curl -s http://localhost:7999/metrics > $DEBUG_DIR/metrics.txt 2>/dev/null
-    
+
     # Performance data
     top -bn1 | head -20 > $DEBUG_DIR/top_output.txt
     iostat -x 1 3 > $DEBUG_DIR/iostat_output.txt 2>/dev/null
-    
+
     # Create archive
     tar -czf $DEBUG_DIR.tar.gz -C /tmp $(basename $DEBUG_DIR)
     rm -rf $DEBUG_DIR
-    
+
     echo "✅ Debug information collected: $DEBUG_DIR.tar.gz"
     echo "   Share this file with support for troubleshooting"
 }

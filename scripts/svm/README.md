@@ -174,7 +174,7 @@ pip3 install your-python-package
 ```bash
 # Switch to different networks
 solana config set --url devnet      # Development
-solana config set --url testnet     # Testing  
+solana config set --url testnet     # Testing
 solana config set --url mainnet     # Production
 solana config set --url localhost   # Local validator
 ```

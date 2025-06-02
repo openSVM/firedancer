@@ -12,10 +12,10 @@
     Transactions are placed into a ram according to the LSBs of the
     transaction ID, along with the current timestamp.
 
-    For every ram location, a last-seen timestamp is also kept in a 
+    For every ram location, a last-seen timestamp is also kept in a
     separate ram, which is only updated when a transaction is deemed
     new.
-    
+
     Output pointer advances only if a transaction has a timestamp newer
     than its corresponding last-seen timestamp.
 

@@ -9,7 +9,7 @@ This directory contains comprehensive documentation and tools for developing and
 - **[DevContainer Setup](.devcontainer/)** - GitHub Codespaces development environment
 - **[Implementation Comparison](IMPLEMENTATION_COMPARISON.md)** - How Firedancer compares to other Solana implementations
 
-### 📊 Operations & Monitoring  
+### 📊 Operations & Monitoring
 - **[Validator Monitoring](VALIDATOR_MONITORING.md)** - Comprehensive metrics and alerting guide
 - **[Operational Guide](OPERATIONAL_GUIDE.md)** - Production deployment, security, and troubleshooting
 
@@ -96,7 +96,7 @@ fdctl monitor --config config.toml
 # System optimization
 ./doc/performance-optimization.sh
 
-# Security hardening  
+# Security hardening
 ./doc/security-hardening.sh
 
 # Monitoring setup
@@ -169,7 +169,7 @@ fdctl monitor --config config.toml
    ```bash
    # Check tile distribution
    fdctl monitor --config config.toml
-   
+
    # Optimize CPU affinity
    # Add to config.toml:
    [development]
@@ -180,7 +180,7 @@ fdctl monitor --config config.toml
    ```bash
    # Check XDP driver support
    ethtool -i eth0 | grep driver
-   
+
    # Verify ports are accessible
    ss -tuln | grep -E "(8001|8899|7999)"
    ```
@@ -189,7 +189,7 @@ fdctl monitor --config config.toml
    ```bash
    # Enable huge pages
    echo 2048 > /proc/sys/vm/nr_hugepages
-   
+
    # Check memory usage
    free -h && cat /proc/meminfo | grep HugePages
    ```
@@ -200,7 +200,7 @@ fdctl monitor --config config.toml
    for peer in entrypoint.testnet.solana.com entrypoint2.testnet.solana.com; do
      ping -c 3 $peer
    done
-   
+
    # Verify system clock synchronization
    timedatectl status
    ```

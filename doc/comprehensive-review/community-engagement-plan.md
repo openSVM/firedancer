@@ -18,19 +18,19 @@ graph TD
     A --> C[Inclusive Collaboration]
     A --> D[Transparent Governance]
     A --> E[Continuous Learning]
-    
+
     B --> B1[Performance Standards]
     B --> B2[Code Quality]
     B --> B3[Security First]
-    
+
     C --> C1[Welcoming Environment]
     C --> C2[Diverse Perspectives]
     C --> C3[Mentorship Culture]
-    
+
     D --> D1[Open Decision Making]
     D --> D2[Public Roadmaps]
     D --> D3[Community Input]
-    
+
     E --> E1[Knowledge Sharing]
     E --> E2[Skill Development]
     E --> E3[Innovation Culture]
@@ -48,7 +48,7 @@ Community Hierarchy:
 │   ├── Release management and security oversight
 │   ├── Community standards and code of conduct enforcement
 │   └── Strategic partnership and ecosystem development
-├── Module Maintainers (15-20 people)  
+├── Module Maintainers (15-20 people)
 │   ├── Domain expertise in specific components
 │   ├── Code review and merge authority for modules
 │   ├── Technical mentorship for contributors
@@ -73,17 +73,17 @@ graph TD
     C --> D[Community Feedback]
     D --> E[Core Team Review]
     E --> F[Implementation Decision]
-    
+
     B1[GitHub Discussions] --> B
     B2[Community Calls] --> B
-    
+
     C1[Technical Feasibility] --> C
     C2[Performance Impact] --> C
     C3[Security Implications] --> C
-    
+
     D1[Public Comment Period] --> D
     D2[Stakeholder Input] --> D
-    
+
     E1[Consensus Building] --> E
     E2[Final Review] --> E
 ```
@@ -204,12 +204,12 @@ graph TD
     A --> C[Documentation]
     A --> D[Community Building]
     A --> E[Testing & QA]
-    
+
     B --> F[Monthly Contributor Spotlight]
     C --> F
     D --> F
     E --> F
-    
+
     F --> G[Public Recognition]
     F --> H[Swag and Rewards]
     F --> I[Conference Speaking]
@@ -312,19 +312,19 @@ graph TD
     A --> C[Developers]
     A --> D[Researchers]
     A --> E[Enterprises]
-    
+
     B --> B1[RPC Providers]
     B --> B2[Staking Services]
     B --> B3[Independent Validators]
-    
+
     C --> C1[DApp Developers]
     C --> C2[Tool Builders]
     C --> C3[Integration Partners]
-    
+
     D --> D1[Academic Institutions]
     D --> D2[Blockchain Researchers]
     D --> D3[Security Auditors]
-    
+
     E --> E1[Financial Institutions]
     E --> E2[Technology Partners]
     E --> E3[Infrastructure Providers]
@@ -391,17 +391,17 @@ Developer Ecosystem:
 gantt
     title Firedancer Community Events Calendar
     dateFormat YYYY-MM-DD
-    
+
     section Quarterly Events
     Q1 Developer Workshop    :workshop1, 2024-03-15, 2d
     Q2 Community Conference  :conf1, 2024-06-15, 3d
     Q3 Performance Summit    :summit1, 2024-09-15, 2d
     Q4 Year-End Retrospective :retro1, 2024-12-15, 1d
-    
+
     section Monthly Events
     Technical Webinars       :webinar, 2024-01-15, 365d
     Community Calls          :calls, 2024-01-01, 365d
-    
+
     section Ongoing Programs
     Mentorship Program       :mentor, 2024-01-01, 365d
     Contributor Recognition  :recognition, 2024-01-01, 365d
@@ -496,15 +496,15 @@ graph TD
     A[DEI Strategy] --> B[Inclusive Recruitment]
     A --> C[Equitable Opportunities]
     A --> D[Supportive Environment]
-    
+
     B --> B1[Diverse Outreach Programs]
     B --> B2[Barrier Removal Initiatives]
     B --> B3[Inclusive Language Guidelines]
-    
+
     C --> C1[Merit-Based Recognition]
     C --> C2[Equal Access to Resources]
     C --> C3[Leadership Development]
-    
+
     D --> D1[Safe Space Policies]
     D --> D2[Conflict Resolution]
     D --> D3[Cultural Sensitivity Training]
@@ -573,16 +573,16 @@ graph TD
     A --> C[Detection]
     A --> D[Resolution]
     A --> E[Follow-up]
-    
+
     B --> B1[Clear Expectations]
     B --> B2[Education and Training]
-    
+
     C --> C1[Community Reporting]
     C --> C2[Automated Monitoring]
-    
+
     D --> D1[Mediation]
     D --> D2[Escalation Process]
-    
+
     E --> E1[Relationship Repair]
     E --> E2[Prevention Improvement]
 ```
@@ -654,19 +654,19 @@ graph TD
     A --> C[Discord Server]
     A --> D[Documentation Hub]
     A --> E[Analytics Platform]
-    
+
     B --> B1[Issue Templates]
     B --> B2[PR Automation]
     B --> B3[Project Boards]
-    
+
     C --> C1[Role Management]
     C --> C2[Channel Organization]
     C --> C3[Bot Integration]
-    
+
     D --> D1[GitBook/Gitiles]
     D --> D2[Search Functionality]
     D --> D3[Version Control]
-    
+
     E --> E1[Community Metrics]
     E --> E2[Engagement Tracking]
     E --> E3[Growth Analysis]
@@ -735,12 +735,12 @@ graph TD
     A --> C[Interviews]
     A --> D[Analytics]
     A --> E[Direct Input]
-    
+
     B --> F[Analysis]
     C --> F
     D --> F
     E --> F
-    
+
     F --> G[Prioritization]
     G --> H[Implementation]
     H --> I[Communication]
@@ -755,21 +755,21 @@ graph TD
 gantt
     title Community Engagement Implementation Timeline
     dateFormat YYYY-MM-DD
-    
+
     section Foundation (Months 1-2)
     Community Guidelines  :guide1, 2024-06-01, 14d
     Discord Setup        :discord1, after guide1, 7d
     Mentorship Program   :mentor1, 2024-06-15, 21d
-    
+
     section Growth (Months 2-4)
     Content Strategy     :content1, after discord1, 28d
     Event Planning       :events1, after mentor1, 35d
     Partnership Outreach :partner1, after content1, 42d
-    
+
     section Scale (Months 4-6)
     Global Expansion     :global1, after events1, 56d
     Tool Development     :tools1, after partner1, 49d
-    
+
     section Sustainability (Ongoing)
     Feedback Integration :feedback, 2024-06-01, 180d
     Metrics Tracking     :metrics, 2024-06-01, 180d

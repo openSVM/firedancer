@@ -146,7 +146,7 @@ use mollusk_svm::Mollusk;
 #[test]
 fn test_my_program() {
     let mollusk = Mollusk::new(&my_program::id(), "my_program");
-    
+
     let instruction = Instruction {
         program_id: my_program::id(),
         accounts: vec![
@@ -155,7 +155,7 @@ fn test_my_program() {
         ],
         data: my_program::instruction::Initialize {}.data(),
     };
-    
+
     let result = mollusk.process_instruction(&instruction, &accounts);
     assert!(result.program_result.is_ok());
 }
@@ -329,7 +329,7 @@ public class SolanaManager : MonoBehaviour
     {
         Web3.Instance.Initialize(RpcCluster.DevNet);
     }
-    
+
     async void GetBalance()
     {
         var balance = await Web3.Instance.WalletBase.GetBalance();
@@ -344,7 +344,7 @@ import { GambaProvider, useGamba } from 'gamba-react';
 
 function GameComponent() {
     const gamba = useGamba();
-    
+
     const playGame = async () => {
         const result = await gamba.play([50, 0, 200], 1000000); // 1 SOL bet
         console.log('Game result:', result);

@@ -79,7 +79,7 @@ echo "🐍 Installing Python tools..."
 
 # Install Python packages
 safe_install "pip3 install solathon" "Solathon"
-safe_install "pip3 install anchorpy" "AnchorPy" 
+safe_install "pip3 install anchorpy" "AnchorPy"
 safe_install "pip3 install seahorse-lang" "Seahorse"
 safe_install "pip3 install solders" "Solders"
 
@@ -148,7 +148,7 @@ echo "✅ SVM development environment setup complete!"
 echo ""
 echo "🎉 What's installed:"
 echo "  ✓ Solana CLI"
-echo "  ✓ Anchor Framework" 
+echo "  ✓ Anchor Framework"
 echo "  ✓ SPL Token CLI"
 echo "  ✓ Metaboss (NFT tools)"
 echo "  ✓ JavaScript/TypeScript libraries"

@@ -2,11 +2,11 @@
 
 ## Project Context
 
-**Project Name**: Firedancer  
-**Project Goals**: High-performance, secure, and independent Solana validator client  
-**Target Audience**: Solana validators, developers, network operators  
-**Key Technologies**: C, GNU Make, custom IPC (tango), networking (waltz), hardware acceleration  
-**Current State**: Active development with production-ready Frankendancer and full Firedancer in development  
+**Project Name**: Firedancer
+**Project Goals**: High-performance, secure, and independent Solana validator client
+**Target Audience**: Solana validators, developers, network operators
+**Key Technologies**: C, GNU Make, custom IPC (tango), networking (waltz), hardware acceleration
+**Current State**: Active development with production-ready Frankendancer and full Firedancer in development
 
 ## What is Firedancer?
 
@@ -18,7 +18,7 @@ Firedancer is a ground-up reimplementation of a Solana validator client, designe
 - Novel high-performance reimplementations of core Solana primitives
 - Tile-based architecture for optimal CPU utilization
 
-### 🔒 Secure  
+### 🔒 Secure
 - Highly restrictive sandbox with minimal system calls
 - Memory safety through custom management
 - Independent implementation reduces supply chain attack surface
@@ -92,7 +92,7 @@ Firedancer produces two distinct validators:
 ### Processing Layer (disco)
 Tile-based processing architecture:
 - **net**: Network packet handling
-- **quic**: QUIC protocol and transaction reception  
+- **quic**: QUIC protocol and transaction reception
 - **verify**: Cryptographic signature verification
 - **dedup**: Transaction deduplication
 - **pack**: Transaction scheduling and bundling
@@ -193,7 +193,7 @@ make -j run
 doc/
 ├── comprehensive-review/    # This comprehensive analysis
 │   ├── phase1-codebase-analysis.md
-│   ├── phase2-missing-components.md  
+│   ├── phase2-missing-components.md
 │   ├── phase3-comprehensive-documentation.md
 │   └── phase4-strategic-roadmap.md
 ├── build-system.md        # Build system documentation
@@ -219,7 +219,7 @@ Firedancer is open source and welcomes contributions. Key areas for contribution
 - Performance optimization and tuning
 - Security audit and hardening
 
-### Medium Priority  
+### Medium Priority
 - Developer experience improvements
 - Integration with external tools
 - Platform support expansion
@@ -241,7 +241,7 @@ The project follows a phased development approach:
 - Production monitoring and observability
 - Security hardening
 
-### Phase 2: Enhancement  
+### Phase 2: Enhancement
 - Advanced monitoring and analytics
 - Enhanced developer experience
 - Operational tooling and automation

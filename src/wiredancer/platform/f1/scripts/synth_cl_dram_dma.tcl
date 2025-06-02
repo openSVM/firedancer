@@ -21,7 +21,7 @@ set VDEFINES $VDEFINES
 create_project -in_memory -part [DEVICE_TYPE] -force
 
 ########################################
-## Generate clocks based on Recipe 
+## Generate clocks based on Recipe
 ########################################
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling aws_gen_clk_constraints.tcl to generate clock constraints from developer's specified recipe.";
@@ -61,7 +61,7 @@ read_verilog -sv [ list \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/mgt_acc_axl.sv  \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/mgt_gen_axl.sv  \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/sh_ddr.sv \
-  $HDK_SHELL_DESIGN_DIR/interfaces/cl_ports.vh 
+  $HDK_SHELL_DESIGN_DIR/interfaces/cl_ports.vh
 ]
 
 file copy -force $UNUSED_TEMPLATES_DIR/unused_sh_bar1_template.inc        $CL_DIR/design
@@ -110,7 +110,7 @@ puts "AWS FPGA: Reading IP blocks";
 
 #Read DDR IP
 read_ip [ list \
-  $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci 
+  $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci
 ]
 
 #Read IP for axi register slices

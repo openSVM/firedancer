@@ -105,7 +105,7 @@ SigVerify is the verification process of [ED25519](https://en.wikipedia.org/wiki
 
 ## WD.SigVerify API ##
 
-WD.SigVerify utilizes an asynchronous API: software pushes requests to the accelerator, and the accelerator pushes results to software.  
+WD.SigVerify utilizes an asynchronous API: software pushes requests to the accelerator, and the accelerator pushes results to software.
 
 - `wd_ed25519_verify_init_req`
   - Initializes request API.  By default all signature failures are dropped and no response is sent back to software.  This feature is programmable here.  All fields pertaining to response's tango.mcache are also provided here.
@@ -144,7 +144,7 @@ We solve the queueing problem of concatenating pipelines of different latency an
   - wait if `A+B >= T1`
   - wait if `C < T2`
 
-This pipeline design allows for arbitrary number of registers along the connections between links.  This is especially required for timing closure when crossing SLRs in a multi-SLR FPGA, such as the VU9P present in AWS-F1 systems.  This design also allows to create m-n connections between chain links, however this is not applicable to WD-SV.  
+This pipeline design allows for arbitrary number of registers along the connections between links.  This is especially required for timing closure when crossing SLRs in a multi-SLR FPGA, such as the VU9P present in AWS-F1 systems.  This design also allows to create m-n connections between chain links, however this is not applicable to WD-SV.
 
 
 Pseudocode below outlines an algorithmically optimized ED25519 verification procedure, broken into four steps:

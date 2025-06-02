@@ -3,7 +3,7 @@
 # physical cores, numbered 0 and 1 for thread 0 and thread 1 on core 0,
 # 2 and 3 for thread 0 and thread 1 on core 1, and so on.  In
 # production, the configuration would not be correct as cores do not
-# need to be dedicated to generating and sending transactions for 
+# need to be dedicated to generating and sending transactions for
 # benchmarking.
 [ledger]
   path = "/data/shm/{name}/ledger"

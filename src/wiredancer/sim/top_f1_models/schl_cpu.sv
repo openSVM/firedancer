@@ -16,7 +16,7 @@ module shcl_cpu
   input var logic [W_HASH-1:0] in_hash_data,
   input var logic              in_hash_valid,
   input var logic [W_T-1:0]    in_hash_ref,
-  output    logic              in_hash_ready, 
+  output    logic              in_hash_ready,
 
   output    logic [W_HASH-1:0]   out_hash_data,
   output    logic [W_T-1:0]      out_ref,

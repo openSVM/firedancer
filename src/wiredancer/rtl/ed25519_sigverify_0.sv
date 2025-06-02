@@ -14,18 +14,18 @@
                  |     --+   +-----------+   +------+   +--         +--------------+   |
                  |                                                                     |
                  |                                                                     |
-                 |                             +------+                                | 
+                 |                             +------+                                |
                  +-----------------------------> Meta +--------------------------------+
-                                               +------+            
+                                               +------+
 
     Dispatch and merge of sigverify-split-0 jobs to processors.
 
     Dispatch serializes the three inputs of each invocation
-    into the same processor.  Job distribution logic is a 
+    into the same processor.  Job distribution logic is a
     simple round-robin policy.  Pointer moves when a job
     is completely taken by a processor.
 
-    Merge is a simple multiplexer with a round robin pocliy for 
+    Merge is a simple multiplexer with a round robin pocliy for
     selection.  As multipler processors can produce results at
     the same time, each requires a separate fifo to accept
     backrepssure from the multiplexer.
@@ -192,7 +192,7 @@ generate;
             .W_IN_MEM                               (6),
             .W_T                                    ($bits(sch_ii_k))
         ) schl_cpu_inst (
-            .in_hash_ready                          (sch_ii_r), 
+            .in_hash_ready                          (sch_ii_r),
             .in_hash_valid                          (sch_ii_v),
             .in_hash_ref                            (sch_ii_k),
             .in_hash_data                           (sch_ii_d),

@@ -90,13 +90,13 @@ endgenerate
 
 always_ff@(posedge clk) begin
     o_word <= word;
-    /* INST_I is guaranteed to be in range [0,80) 
+    /* INST_I is guaranteed to be in range [0,80)
         (see the asserts above) */
     if ( INST_I < 16 ) begin
         o_data <= data;
     end else begin
         o_data <= {word, data[16-1:1]};
-end end    
+end end
 
 endmodule // _round_msgseq
 
@@ -212,7 +212,7 @@ generate
             .clk        ( clk ),
             .rst        ( rst )
         );
-    end 
+    end
 endgenerate
 
 

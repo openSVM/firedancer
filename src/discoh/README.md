@@ -16,7 +16,7 @@ The `discoh` directory contains hybrid and helper implementations for specific d
 - **poh**: Proof of History helper implementations
 
 ### Storage and Resolution
-- **store**: Storage abstraction and helper implementations  
+- **store**: Storage abstraction and helper implementations
 - **resolv**: Name resolution and service discovery helpers
 
 ## Relationship to Other Disco Directories

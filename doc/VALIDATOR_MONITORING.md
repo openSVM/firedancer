@@ -406,32 +406,32 @@ def collect_metrics():
         # Get metrics from Firedancer
         response = requests.get('http://localhost:7999/metrics', timeout=5)
         metrics = response.text
-        
+
         # Parse and export slot height
         for line in metrics.split('\n'):
             if 'fd_validator_slot_height' in line and not line.startswith('#'):
                 slot_height = float(line.split()[-1])
                 slot_height_gauge.set(slot_height)
                 break
-        
+
         # Calculate vote lag
-        rpc_response = requests.post('http://localhost:8899', 
+        rpc_response = requests.post('http://localhost:8899',
             json={"jsonrpc":"2.0","id":1,"method":"getSlot"}, timeout=5)
         network_slot = rpc_response.json()['result']
         vote_lag = max(0, network_slot - slot_height)
         vote_lag_gauge.set(vote_lag)
-        
+
         # Calculate network health score (0-100)
         health_score = max(0, 100 - (vote_lag * 10))
         network_health_gauge.set(health_score)
-        
+
     except Exception as e:
         print(f"Error collecting metrics: {e}")
 
 if __name__ == '__main__':
     start_http_server(8000)
     print("Custom metrics server started on port 8000")
-    
+
     while True:
         collect_metrics()
         time.sleep(15)

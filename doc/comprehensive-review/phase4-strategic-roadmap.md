@@ -16,17 +16,17 @@ gantt
     Documentation Cleanup    :doc1, 2024-06-01, 30d
     Architecture Documentation :doc2, after doc1, 45d
     Testing Framework        :test1, 2024-06-15, 60d
-    
+
     section Core Features
     Monitoring & Observability :obs1, 2024-07-01, 90d
     Security Hardening       :sec1, 2024-07-15, 75d
     Performance Optimization :perf1, 2024-08-01, 90d
-    
+
     section Advanced Features
     Developer Experience     :dev1, 2024-09-01, 120d
     Operational Tools        :ops1, 2024-09-15, 105d
     Community Features       :comm1, 2024-10-01, 90d
-    
+
     section Future Vision
     Elastic Scaling          :scale1, 2024-11-01, 150d
     Advanced Monitoring      :mon2, 2024-11-15, 135d

@@ -1655,7 +1655,7 @@ async def model_dsdp(ddut, dut, clk, do_log=False):
                 ) = out
 
                 outs.remove(out)
-        
+
                 b_m = BinaryValue(bits=W_M, bigEndian=False)
                 b_zx = BinaryValue(bits=255, bigEndian=False)
                 b_zy = BinaryValue(bits=255, bigEndian=False)

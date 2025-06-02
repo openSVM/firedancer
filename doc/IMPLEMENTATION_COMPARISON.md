@@ -59,10 +59,10 @@
 ```mermaid
 graph LR
     A[Load Level] --> B[Low: 1K TPS]
-    A --> C[Medium: 10K TPS]  
+    A --> C[Medium: 10K TPS]
     A --> D[High: 50K TPS]
     A --> E[Extreme: 100K+ TPS]
-    
+
     B --> F[All implementations handle well]
     C --> G[Agave: Stable<br/>Jito: Stable<br/>Firedancer: Excellent<br/>Frankendancer: Good]
     D --> H[Agave: Degraded<br/>Jito: Degraded<br/>Firedancer: Excellent<br/>Frankendancer: Good]
@@ -255,7 +255,7 @@ Performance Degradation Under Load:
 ### Innovation Pipeline
 
 1. **Quantum-Resistant Cryptography**: First implementation planned
-2. **AI-Optimized Scheduling**: Machine learning for optimal tile scheduling  
+2. **AI-Optimized Scheduling**: Machine learning for optimal tile scheduling
 3. **Cross-Chain Bridges**: Native multi-chain support
 4. **Advanced Privacy Features**: Zero-knowledge proof integration
 

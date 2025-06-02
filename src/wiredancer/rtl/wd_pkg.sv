@@ -205,7 +205,7 @@ always_ff@(posedge clk) begin
         2'b10: p <= p + 1;
         2'b01: p <= p - 1;
     endcase
-    if (rst) p <= 0; 
+    if (rst) p <= 0;
 end
 
 endmodule // piped_pending
@@ -741,7 +741,7 @@ module rrb_merge #(
 
     input wire [1-1:0]                  clk,
     input wire [1-1:0]                  rst
-    
+
 );
 
 localparam integer N_L                  = $clog2(N);

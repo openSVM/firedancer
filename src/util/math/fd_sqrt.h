@@ -64,7 +64,7 @@ FD_PROTOTYPES_BEGIN
    recurrence numerator to compensate:
 
      y' = floor( (y^2 + y + x) / (2 y + 1) )
-  
+
    At convergence we now have:
 
      y^2 = x-r
@@ -108,7 +108,7 @@ FD_PROTOTYPES_BEGIN
    very simple guesses.  We use:
 
      y = sqrt(x) = sqrt( 2^n + d ) <~ 2^(n/2)
-   
+
    where n is the index of the MSB and d is in [0,2^n) (i.e. is n bits
    wide).  Thus:
 
@@ -118,7 +118,7 @@ FD_PROTOTYPES_BEGIN
 
    For small values of x, we encode a 20 entry 3-bit wide lookup table
    in a 64-bit constant and just do a quick lookup.
-   
+
    For types narrower than 64-bit, we can do the iteration portably in a
    wider type and simplify the operation.  We also do this if the
    underlying platform supports 128-bit wide types.

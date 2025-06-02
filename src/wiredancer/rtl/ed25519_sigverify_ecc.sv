@@ -2,7 +2,7 @@
 
 /*
 
-    Multiple sub-pipelines combined into a single-input single-output 
+    Multiple sub-pipelines combined into a single-input single-output
     pipeline.  Different operations have different depths.  Sub-results
     are combined into a single output at various stages (1, 3, 5, M).
 

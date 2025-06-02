@@ -89,7 +89,7 @@ ip link show
 
 # Recommended network cards:
 # - Intel X710/X722 (i40e driver)
-# - Intel E810 (ice driver)  
+# - Intel E810 (ice driver)
 # - Intel X540/X550 (ixgbe driver)
 ```
 
@@ -264,7 +264,7 @@ user = "firedancer"
 
 [log]
     path = "/var/log/firedancer/firedancer.log"
-    colorize = "auto"  
+    colorize = "auto"
     level_stderr = "WARNING"
     level_flush = "ERROR"
 

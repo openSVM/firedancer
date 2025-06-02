@@ -26,7 +26,7 @@ def usage():
 def main():
   if len(sys.argv) < 4:
     usage()
-  
+
   client = Client(sys.argv[1])
   pubkey = Pubkey.from_string(sys.argv[2])
   slot_cnt = int(sys.argv[3])
@@ -42,7 +42,7 @@ def main():
     slot = epoch_start_slot+slot_idx
     rel = slot-prev_slot
     if prev_slot+1==slot:
-      prev_slot = slot  
+      prev_slot = slot
       continue
     dist = slot-epoch_info.absolute_slot
     prev_slot = slot

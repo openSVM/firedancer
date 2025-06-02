@@ -11,7 +11,7 @@ echo "======================================"
 test_command() {
     local cmd="$1"
     local name="$2"
-    
+
     echo -n "Testing $name... "
     if command -v "$cmd" >/dev/null 2>&1; then
         echo "✅ Available"
@@ -26,7 +26,7 @@ test_command() {
 test_version() {
     local cmd="$1"
     local name="$2"
-    
+
     echo -n "Testing $name... "
     if command -v "$cmd" >/dev/null 2>&1; then
         version=$($cmd --version 2>/dev/null | head -1 || echo "unknown")
@@ -85,7 +85,7 @@ echo "🌐 Network Connectivity Tests:"
 test_rpc() {
     local url="$1"
     local name="$2"
-    
+
     echo -n "Testing $name... "
     if curl -s -X POST -H "Content-Type: application/json" \
         -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' \
@@ -105,13 +105,13 @@ echo "⚙️  Solana Configuration:"
 if command -v solana >/dev/null 2>&1; then
     echo "Current config:"
     solana config get 2>/dev/null || echo "❌ Could not get Solana config"
-    
+
     echo ""
     echo "Wallet info:"
     if solana address >/dev/null 2>&1; then
         ADDRESS=$(solana address)
         echo "Address: $ADDRESS"
-        
+
         # Check balance
         BALANCE=$(solana balance 2>/dev/null || echo "0")
         echo "Balance: $BALANCE"

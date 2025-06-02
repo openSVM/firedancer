@@ -14,7 +14,7 @@
     +------------------------------------------> Meta +--------------------------------------------+
                                                +------+
 
-    DSDP runs at a marginally higher clock rate to keep up with the previous 
+    DSDP runs at a marginally higher clock rate to keep up with the previous
     stage throughput.
 
     DSDP is placed in a separate SLR to assist with placement and routing.
