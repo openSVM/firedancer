@@ -19,7 +19,7 @@
  import semmle.code.cpp.ir.ValueNumbering
  import PathGraph
  import filter
- 
+
  /** An instruction that represents a null pointer. */
  class NullInstruction extends ConstantValueInstruction {
    NullInstruction() {
@@ -27,7 +27,7 @@
      this.getResultIRType() instanceof IRAddressType
    }
  }
- 
+
  /**
   * Holds if `checked` is an instruction that is checked against a null value,
   * and `bool` is the instruction that represents the result of the comparison
@@ -53,7 +53,7 @@
        checked.getResultIRType() instanceof IRAddressType
      )
  }
- 
+
  pragma[nomagic]
  predicate candidateResult(LoadInstruction checked, ValueNumber value, IRBlock dominator) {
    explicitNullTestOfInstruction(checked, _) and
@@ -61,7 +61,7 @@
    value.getAnInstruction() = checked and
    dominator.dominates(checked.getBlock())
  }
- 
+
  /**
   * This module constructs a pretty edges relation out of the results produced by
   * the `candidateResult` predicate: We create a path using the instruction successor-
@@ -83,7 +83,7 @@
        deref.getSourceAddress() = address
      )
    }
- 
+
    /**
     * Holds if `checked` has global value number `vn` and is an instruction that is
     * used in a check against a null value.
@@ -91,7 +91,7 @@
    private predicate isSink(LoadInstruction checked, ValueNumber vn) {
      candidateResult(checked, vn, _)
    }
- 
+
    /** Holds if `i` is control-flow reachable from a relevant `LoadInstruction`. */
    private predicate fwdFlow(Instruction i) {
      isSource(i, _)
@@ -101,7 +101,7 @@
        mid.getASuccessor() = i
      )
    }
- 
+
    /**
     * Holds if `i` is part of a path from a relevant `LoadInstruction` to a
     * check against a null value that compares a value against an instruction
@@ -118,7 +118,7 @@
        )
      )
    }
- 
+
    /**
     * Gets a first control-flow successor of `i` that has the same
     * global value number as `i`.
@@ -129,7 +129,7 @@
        result = getASuccessorWithValueNumber(i, vn)
      )
    }
- 
+
    /**
     * Gets a first control-flow successor of `i` that has the same
     * global value number as `i`. Furthermore, `i` has global value
@@ -140,13 +140,13 @@
      result = getASuccessorWithValueNumber0(vn, i.getASuccessor()) and
      vn.getAnInstruction() = i
    }
- 
+
    pragma[nomagic]
    private Instruction getASuccessorWithValueNumber0(ValueNumber vn, Instruction i) {
      result = getASuccessorIfDifferentValueNumberTC(vn, i) and
      vn.getAnInstruction() = result
    }
- 
+
    /**
     * Computes the reflexive transitive closure of `getASuccessorIfDifferentValueNumber`.
     */
@@ -162,7 +162,7 @@
        )
      )
    }
- 
+
    /**
     * Gets an instruction that is a control-flow successor of `i` and which is not assigned
     * the global value number `vn`.
@@ -173,13 +173,13 @@
      not vn.getAnInstruction() = i and
      pragma[only_bind_into](result) = pragma[only_bind_into](i).getASuccessor()
    }
- 
+
    query predicate nodes(Instruction i, string key, string val) {
      revFlow(i, _) and
      key = "semmle.label" and
      val = i.getAst().toString()
    }
- 
+
    /**
     * The control-flow successor relation, compacted by stepping
     * over instruction that don't preserve the global value number.
@@ -202,7 +202,7 @@
      )
    }
  }
- 
+
  from LoadInstruction checked, LoadInstruction deref, ValueNumber sourceValue, IRBlock dominator
  where
    candidateResult(checked, sourceValue, dominator) and

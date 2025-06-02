@@ -49,7 +49,7 @@ generate
 
                 always_ff@(posedge clk) out0 <= in0_r * in1_r;
                 always_ff@(posedge clk) m_o <= m_i_r;
-            
+
             end else begin
 
                 logic [W0+W1-1:0] m;

@@ -123,13 +123,13 @@ fd_fxp_mul_rno( ulong   x,
    Based on:
         z/2^30 ~ (x/2^30)(y/2^30)
      -> z      ~ x y / 2^30
-   With RTZ rounding: 
+   With RTZ rounding:
         z      = floor( x y / 2^30 )
                = (x*y) >> 30
    As x*y might overflow 64 bits, we need to do a 64b*64b->128b
    multiplication (fd_uwide_mul) and a 128b shift right by 30
    (fd_fxp_private_contract).
-   
+
    Fastest style of rounding.  Rounding error in [0,1) ulp.
    (ulp==2^-30). */
 
@@ -146,7 +146,7 @@ fd_fxp_mul_rtz( ulong   x,
    Based on:
         z/2^30 ~ (x/2^30)(y/2^30)
      -> z      ~ x y / 2^30
-   With RAZ rounding: 
+   With RAZ rounding:
         z      = ceil( x y / 2^30 )
                = floor( (x y + 2^30 - 1) / 2^30 )
                = (x*y + 2^30 -1) >> 30
@@ -154,7 +154,7 @@ fd_fxp_mul_rtz( ulong   x,
    multiplication (fd_uwide_mul), a 64b increment of a 128b
    (fd_uwide_inc) and a 128b shift right by 30
    (fd_fxp_private_contract).
-   
+
    Slightly more expensive (one fd_uwide_inc) than RTZ rounding.
    Rounding error in (-1,0] ulp.  (ulp==2^-30). */
 
@@ -233,7 +233,7 @@ fd_fxp_mul_rna( ulong   x,
    bits, we need to do a 64b*64b->128b multiplication (fd_uwide_mul), a
    64b increment of a 128b (fd_uwide_inc) and a 128b shift right by 30
    (fd_fxp_private_contract).
-   
+
    The most accurate style of rounding usually and somewhat more
    expensive (some sequentially dependent bit ops and one fd_uwide_inc)
    than RTZ rounding.  Rounding error in [-1/2,1/2] ulp (unbiased).
@@ -255,7 +255,7 @@ fd_fxp_mul_rne( ulong   x,
    overflow 64 bits, we need to do a 64b*64b->128b multiplication
    (fd_uwide_mul), a 64b increment of a 128b (fd_uwide_inc) and a 128b
    shift right by 30 (fd_fxp_private_contract).
-   
+
    Somewhat more expensive (some sequentially dependent bit ops and one
    fd_uwide_inc) than RTZ rounding.  Rounding error in [-1/2,1/2] ulp
    (unbiased).  (ulp==2^-30). */
@@ -381,7 +381,7 @@ fd_fxp_div_rno( ulong   x,
    Based on:
         z/2^30 ~ (x/2^30) / (y/2^30)
      -> z      ~ 2^30 x / y
-   With RTZ rounding: 
+   With RTZ rounding:
         z      = floor( 2^30 x / y )
    As 2^30 x might overflow 64 bits, we need to expand x
    (fd_fxp_private_expand) and then use a 128b/64b -> 128b divider.
@@ -405,7 +405,7 @@ fd_fxp_div_rtz( ulong   x,
    Based on:
         z/2^30 ~ (x/2^30) / (y/2^30)
      -> z      ~ 2^30 x / y
-   With RAZ rounding: 
+   With RAZ rounding:
         z      = ceil( 2^30 x / y )
                = floor( (2^30 x + y - 1) / y )
    As 2^30 x might overflow 64 bits, we need to expand x
@@ -432,13 +432,13 @@ fd_fxp_div_raz( ulong   x,
    Consider:
      z = floor( (2^30 x + floor( (y-1)/2 )) / y )
    where y>0.
-   
+
    If y is even:                                   odd
      z       = floor( (2^30 x + (y/2) - 1) / y )     = floor( (2^30 x + (y-1)/2) / y )
    or:
      z y + r = 2^30 x + (y/2)-1                      = 2^30 x + (y-1)/2
    for some r in [0,y-1].  Or:
-     z y     = 2^30 x + delta                        = 2^30 x + delta                        
+     z y     = 2^30 x + delta                        = 2^30 x + delta
    where:
      delta   in [-y/2,y/2-1]                         in [-y/2+1/2,y/2-1/2]
    or:
@@ -477,13 +477,13 @@ fd_fxp_div_rnz( ulong   x,
    Consider:
      z = floor( (2^30 x + floor( y/2 )) / y )
    where y>0.
-   
+
    If y is even:                                   odd
      z       = floor( (2^30 x + (y/2)) / y )         = floor( (2^30 x + (y-1)/2) / y )
    or:
      z y + r = 2^30 x + (y/2)                        = 2^30 x + (y-1)/2
    for some r in [0,y-1].  Or:
-     z y     = 2^30 x + delta                        = 2^30 x + delta                        
+     z y     = 2^30 x + delta                        = 2^30 x + delta
    where:
      delta   in [-y/2+1,y/2]                         in [-y/2+1/2,y/2-1/2]
    or:
@@ -504,7 +504,7 @@ fd_fxp_div_rnz( ulong   x,
 
    Slightly more expensive (one fd_uwide_inc) than RTZ rounding.
    Rounding error in [-1/2,1/2) ulp. (ulp==2^-30).
-   
+
    Probably worth noting that if y has its least significant bit set,
    all the rnz/rna/rne/rno modes yield the same result (as ties aren't
    possible) and this is the cheapest of the round nearest modes.*/
@@ -532,7 +532,7 @@ fd_fxp_div_rna( ulong   x,
    If r < y/2, the result should round down.  And if r > y/2 the result
    should round up.  If r==y/2 (which is only possible if y is even),
    the result should round down / up when q is even / odd.
-   
+
    Combining yields we need to round up when:
 
      r>floor(y/2) or (r==floor(y/2) and y is even and q is odd)

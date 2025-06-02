@@ -417,8 +417,8 @@ assign rd_not_empty = ~rd_empty;
    );
 
    // End of xpm_fifo_sync_inst instantiation
-				
-			
+
+
 endmodule
 
 

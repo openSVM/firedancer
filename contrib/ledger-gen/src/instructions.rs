@@ -286,7 +286,7 @@ pub fn create_nonce_account_instructions(nonce_account: Option<Keypair>, payer: 
         ],
     );
 
-    nonce_account_instructions.push(initialize_nonce_account_instruction);    
+    nonce_account_instructions.push(initialize_nonce_account_instruction);
 
     (nonce_account, nonce_account_instructions)
 }

@@ -371,8 +371,8 @@ module simple_dual_port_ram #(
    );
 
    // End of xpm_memory_sdpram_inst instantiation
-				
-				
+
+
 
 // End of xpm_memory_sdpram instance declaration
 

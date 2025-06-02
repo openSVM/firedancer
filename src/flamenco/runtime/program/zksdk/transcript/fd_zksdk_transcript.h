@@ -59,7 +59,7 @@ fd_zksdk_transcript_append_handle( fd_zksdk_transcript_t * transcript,
   fd_merlin_transcript_append_message( transcript, label, label_len, handle, 32 );
 }
 
-/* 
+/*
  * Domain separators
  */
 

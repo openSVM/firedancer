@@ -1,13 +1,13 @@
 #!/bin/bash -f
 
-# This script wraps the solana-ledger-tool and solcap to produce useful output 
+# This script wraps the solana-ledger-tool and solcap to produce useful output
 # while debugging ledgers for the user
 #
 # This script can be used to produce a solcap file for a given ledger for both firedancer
 # and solana. It can also be used to produce a diff between the two solcap files.
 #
 # Example Command:
-# src/flamenco/capture/solcap.sh --firedancer-solcap test.solcap --end-slot 250127996 
+# src/flamenco/capture/solcap.sh --firedancer-solcap test.solcap --end-slot 250127996
 # --ledger dump/mainnet-579/ --solana-solcap solana.solcap --checkpoint test_ledger_backup --output diff
 
 POSITION_ARGS=()
@@ -78,7 +78,7 @@ done
 # Make sure there are no errors in the solcap output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-NC='\033[0m' 
+NC='\033[0m'
 
 # Make sure firedancer solcap exists
 if [ -f "$FD_SOLCAP" ]; then
@@ -104,7 +104,7 @@ else
     echo -e "${RED}File=${FD_SOLCAP} failed to be created.${NC}"
     exit 1
   fi
-fi 
+fi
 
 # If the solana solcap doesn't exist, we will create it with solana-ledger-tool and fd_solcap_import
 if [ -f "$SOLANA_SOLCAP" ]; then
@@ -134,15 +134,15 @@ else
 fi
 
 
-# Produce a diff between the two files and store it in a file. We will only do 
+# Produce a diff between the two files and store it in a file. We will only do
 # this iff the user has specified a file to store the diff in
 if [ $NO_DIFF = true ]; then
    echo -e "\n${RED}Not producing a diff${NC}"
    exit 0;
 fi
-if [ -z "$DIFF_OUTPUT" ]; then 
+if [ -z "$DIFF_OUTPUT" ]; then
   "$OBJDIR"/bin/fd_solcap_diff "$FD_SOLCAP" "$SOLANA_SOLCAP" -v $VERBOSITY
-else 
+else
   "$OBJDIR"/bin/fd_solcap_diff "$FD_SOLCAP" "$SOLANA_SOLCAP" -v $VERBOSITY 1> "$DIFF_OUTPUT"
   if grep -q ERR "$DIFF_OUTPUT"; then
       echo -e "\n${RED}Error in diff output${NC}"

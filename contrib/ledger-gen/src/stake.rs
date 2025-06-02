@@ -32,7 +32,7 @@ use crate::utils;
 
 pub fn move_lamports(client: &RpcClient, payer: &Keypair) {
     let from_stake_account = Keypair::new();
-    
+
     let authorized = Authorized {
         staker: payer.pubkey(),
         withdrawer: payer.pubkey(),
@@ -75,7 +75,7 @@ pub fn move_lamports(client: &RpcClient, payer: &Keypair) {
 
 pub fn move_stake(client: &RpcClient, payer: &Keypair) {
     let from_stake_account = Keypair::new();
-    
+
     let authorized = Authorized {
         staker: payer.pubkey(),
         withdrawer: payer.pubkey(),

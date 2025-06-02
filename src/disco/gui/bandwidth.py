@@ -26,17 +26,17 @@ async def measure_bandwidth(uri):
                     bandwidth_mbps = (total_bytes * 8) / (elapsed_time * 1_000_000)
                     if bandwidth_mbps >= 0.001:
                         bandwidths.append((group, bandwidth_mbps))
-                
+
                 # Sort by bandwidth in descending order
                 bandwidths.sort(key=lambda x: x[1], reverse=True)
-                
+
                 for group, bandwidth_mbps in bandwidths:
                     print(f"Incoming bandwidth for {group}: {bandwidth_mbps:.2f} Mbps")
-                
+
                 # Calculate and print the overall total bandwidth
                 overall_bandwidth_mbps = (overall_total_bytes * 8) / (elapsed_time * 1_000_000)
                 print(f"Total incoming bandwidth: {overall_bandwidth_mbps:.2f} Mbps")
-                
+
                 start_time = time.time()
                 total_bytes_by_group.clear()
                 overall_total_bytes = 0

@@ -91,8 +91,8 @@ module areset_sync(
    );
 
    // End of xpm_cdc_async_rst_inst instantiation
-				
-				
+
+
 endmodule
 
 `default_nettype wire

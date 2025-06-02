@@ -47,7 +47,7 @@ fd_is_null_alloc_virtual( fd_valloc_t valloc ) {
 }
 
 #if FD_HAS_HOSTED
-/* The backtracing valloc is a debugging tool for tracking memory leaks in 
+/* The backtracing valloc is a debugging tool for tracking memory leaks in
    applications using vallocs. It can be used in combination with
    contrib/tool/leak-detector.py to find potential memory leaks. */
 static inline FD_FN_CONST fd_valloc_t

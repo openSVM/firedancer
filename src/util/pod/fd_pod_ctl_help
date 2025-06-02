@@ -69,7 +69,7 @@ set pod type path val
   pseudocode:
 
     t = query type pod path       ... check if path exists
-    if   t==type, remove pod path ... yes and to right type 
+    if   t==type, remove pod path ... yes and to right type
     elif t!=void, fail            ... yes but to wrong type
     fi                            ... no
     insert pod type val           ... insert new val

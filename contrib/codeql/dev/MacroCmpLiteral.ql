@@ -19,7 +19,7 @@ predicate callOriginated(Element e, FunctionCall call) {
 from
     Function func, FunctionCall call
 where
-    exists(MacroReturn ret | 
+    exists(MacroReturn ret |
             exists(ComparisonOperation cmp | cmp.getAnOperand().findRootCause() instanceof Literal and
                 callOriginated(cmp.getAnOperand().findRootCause(), call) and
                 cmp.getOperator() = "==") and

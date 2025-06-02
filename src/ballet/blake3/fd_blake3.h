@@ -110,7 +110,7 @@ fd_blake3_fini_512( fd_blake3_t * sha,
 
 void *
 fd_blake3_fini_varlen( fd_blake3_t * sha,
-                       void *        hash, 
+                       void *        hash,
                        ulong         hash_len );
 
 FD_PROTOTYPES_END

@@ -338,12 +338,12 @@ piped_pending #(
 // P::::::PPPPPP:::::P    CC:::::::::::::::CI::::::::IE::::::::::::::::::::E
 // PP:::::P     P:::::P  C:::::CCCCCCCC::::CII::::::IIEE::::::EEEEEEEEE::::E
 //   P::::P     P:::::P C:::::C       CCCCCC  I::::I    E:::::E       EEEEEE
-//   P::::P     P:::::PC:::::C                I::::I    E:::::E             
-//   P::::PPPPPP:::::P C:::::C                I::::I    E::::::EEEEEEEEEE   
-//   P:::::::::::::PP  C:::::C                I::::I    E:::::::::::::::E   
-//   P::::PPPPPPPPP    C:::::C                I::::I    E:::::::::::::::E   
-//   P::::P            C:::::C                I::::I    E::::::EEEEEEEEEE   
-//   P::::P            C:::::C                I::::I    E:::::E             
+//   P::::P     P:::::PC:::::C                I::::I    E:::::E
+//   P::::PPPPPP:::::P C:::::C                I::::I    E::::::EEEEEEEEEE
+//   P:::::::::::::PP  C:::::C                I::::I    E:::::::::::::::E
+//   P::::PPPPPPPPP    C:::::C                I::::I    E:::::::::::::::E
+//   P::::P            C:::::C                I::::I    E::::::EEEEEEEEEE
+//   P::::P            C:::::C                I::::I    E:::::E
 //   P::::P             C:::::C       CCCCCC  I::::I    E:::::E       EEEEEE
 // PP::::::PP            C:::::CCCCCCCC::::CII::::::IIEE::::::EEEEEEEE:::::E
 // P::::::::P             CC:::::::::::::::CI::::::::IE::::::::::::::::::::E
@@ -404,21 +404,21 @@ generate
     end
 endgenerate
 
-// DDDDDDDDDDDDD        MMMMMMMM               MMMMMMMM               AAA               
-// D::::::::::::DDD     M:::::::M             M:::::::M              A:::A              
-// D:::::::::::::::DD   M::::::::M           M::::::::M             A:::::A             
-// DDD:::::DDDDD:::::D  M:::::::::M         M:::::::::M            A:::::::A            
-//   D:::::D    D:::::D M::::::::::M       M::::::::::M           A:::::::::A           
-//   D:::::D     D:::::DM:::::::::::M     M:::::::::::M          A:::::A:::::A          
-//   D:::::D     D:::::DM:::::::M::::M   M::::M:::::::M         A:::::A A:::::A         
-//   D:::::D     D:::::DM::::::M M::::M M::::M M::::::M        A:::::A   A:::::A        
-//   D:::::D     D:::::DM::::::M  M::::M::::M  M::::::M       A:::::A     A:::::A       
-//   D:::::D     D:::::DM::::::M   M:::::::M   M::::::M      A:::::AAAAAAAAA:::::A      
-//   D:::::D     D:::::DM::::::M    M:::::M    M::::::M     A:::::::::::::::::::::A     
-//   D:::::D    D:::::D M::::::M     MMMMM     M::::::M    A:::::AAAAAAAAAAAAA:::::A    
-// DDD:::::DDDDD:::::D  M::::::M               M::::::M   A:::::A             A:::::A   
-// D:::::::::::::::DD   M::::::M               M::::::M  A:::::A               A:::::A  
-// D::::::::::::DDD     M::::::M               M::::::M A:::::A                 A:::::A 
+// DDDDDDDDDDDDD        MMMMMMMM               MMMMMMMM               AAA
+// D::::::::::::DDD     M:::::::M             M:::::::M              A:::A
+// D:::::::::::::::DD   M::::::::M           M::::::::M             A:::::A
+// DDD:::::DDDDD:::::D  M:::::::::M         M:::::::::M            A:::::::A
+//   D:::::D    D:::::D M::::::::::M       M::::::::::M           A:::::::::A
+//   D:::::D     D:::::DM:::::::::::M     M:::::::::::M          A:::::A:::::A
+//   D:::::D     D:::::DM:::::::M::::M   M::::M:::::::M         A:::::A A:::::A
+//   D:::::D     D:::::DM::::::M M::::M M::::M M::::::M        A:::::A   A:::::A
+//   D:::::D     D:::::DM::::::M  M::::M::::M  M::::::M       A:::::A     A:::::A
+//   D:::::D     D:::::DM::::::M   M:::::::M   M::::::M      A:::::AAAAAAAAA:::::A
+//   D:::::D     D:::::DM::::::M    M:::::M    M::::::M     A:::::::::::::::::::::A
+//   D:::::D    D:::::D M::::::M     MMMMM     M::::::M    A:::::AAAAAAAAAAAAA:::::A
+// DDD:::::DDDDD:::::D  M::::::M               M::::::M   A:::::A             A:::::A
+// D:::::::::::::::DD   M::::::M               M::::::M  A:::::A               A:::::A
+// D::::::::::::DDD     M::::::M               M::::::M A:::::A                 A:::::A
 // DDDDDDDDDDDDD        MMMMMMMM               MMMMMMMMAAAAAAA                   AAAAAAA
 
 dma_result #(
@@ -453,22 +453,22 @@ dma_result #(
     .rst                        (rst_r[2])
 );
 
-// PPPPPPPPPPPPPPPPP                  AAA               DDDDDDDDDDDDD        
-// P::::::::::::::::P                A:::A              D::::::::::::DDD     
-// P::::::PPPPPP:::::P              A:::::A             D:::::::::::::::DD   
-// PP:::::P     P:::::P            A:::::::A            DDD:::::DDDDD:::::D  
-//   P::::P     P:::::P           A:::::::::A             D:::::D    D:::::D 
+// PPPPPPPPPPPPPPPPP                  AAA               DDDDDDDDDDDDD
+// P::::::::::::::::P                A:::A              D::::::::::::DDD
+// P::::::PPPPPP:::::P              A:::::A             D:::::::::::::::DD
+// PP:::::P     P:::::P            A:::::::A            DDD:::::DDDDD:::::D
+//   P::::P     P:::::P           A:::::::::A             D:::::D    D:::::D
 //   P::::P     P:::::P          A:::::A:::::A            D:::::D     D:::::D
 //   P::::PPPPPP:::::P          A:::::A A:::::A           D:::::D     D:::::D
 //   P:::::::::::::PP          A:::::A   A:::::A          D:::::D     D:::::D
 //   P::::PPPPPPPPP           A:::::A     A:::::A         D:::::D     D:::::D
 //   P::::P                  A:::::AAAAAAAAA:::::A        D:::::D     D:::::D
 //   P::::P                 A:::::::::::::::::::::A       D:::::D     D:::::D
-//   P::::P                A:::::AAAAAAAAAAAAA:::::A      D:::::D    D:::::D 
-// PP::::::PP             A:::::A             A:::::A   DDD:::::DDDDD:::::D  
-// P::::::::P            A:::::A               A:::::A  D:::::::::::::::DD   
-// P::::::::P           A:::::A                 A:::::A D::::::::::::DDD     
-// PPPPPPPPPP          AAAAAAA                   AAAAAAADDDDDDDDDDDDD        
+//   P::::P                A:::::AAAAAAAAAAAAA:::::A      D:::::D    D:::::D
+// PP::::::PP             A:::::A             A:::::A   DDD:::::DDDDD:::::D
+// P::::::::P            A:::::A               A:::::A  D:::::::::::::::DD
+// P::::::::P           A:::::A                 A:::::A D::::::::::::DDD
+// PPPPPPPPPP          AAAAAAA                   AAAAAAADDDDDDDDDDDDD
 
 rrb_merge #(
     .W                                          ($bits(ext_m0[0])),
@@ -515,21 +515,21 @@ sha512_pre #(
     .rst                                        (rst)
 );
 
-//    SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH               AAA               
-//  SS:::::::::::::::SH:::::::H     H:::::::H              A:::A              
-// S:::::SSSSSS::::::SH:::::::H     H:::::::H             A:::::A             
-// S:::::S     SSSSSSSHH::::::H     H::::::HH            A:::::::A            
-// S:::::S              H:::::H     H:::::H             A:::::::::A           
-// S:::::S              H:::::H     H:::::H            A:::::A:::::A          
-//  S::::SSSS           H::::::HHHHH::::::H           A:::::A A:::::A         
-//   SS::::::SSSSS      H:::::::::::::::::H          A:::::A   A:::::A        
-//     SSS::::::::SS    H:::::::::::::::::H         A:::::A     A:::::A       
-//        SSSSSS::::S   H::::::HHHHH::::::H        A:::::AAAAAAAAA:::::A      
-//             S:::::S  H:::::H     H:::::H       A:::::::::::::::::::::A     
-//             S:::::S  H:::::H     H:::::H      A:::::AAAAAAAAAAAAA:::::A    
-// SSSSSSS     S:::::SHH::::::H     H::::::HH   A:::::A             A:::::A   
-// S::::::SSSSSS:::::SH:::::::H     H:::::::H  A:::::A               A:::::A  
-// S:::::::::::::::SS H:::::::H     H:::::::H A:::::A                 A:::::A 
+//    SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH               AAA
+//  SS:::::::::::::::SH:::::::H     H:::::::H              A:::A
+// S:::::SSSSSS::::::SH:::::::H     H:::::::H             A:::::A
+// S:::::S     SSSSSSSHH::::::H     H::::::HH            A:::::::A
+// S:::::S              H:::::H     H:::::H             A:::::::::A
+// S:::::S              H:::::H     H:::::H            A:::::A:::::A
+//  S::::SSSS           H::::::HHHHH::::::H           A:::::A A:::::A
+//   SS::::::SSSSS      H:::::::::::::::::H          A:::::A   A:::::A
+//     SSS::::::::SS    H:::::::::::::::::H         A:::::A     A:::::A
+//        SSSSSS::::S   H::::::HHHHH::::::H        A:::::AAAAAAAAA:::::A
+//             S:::::S  H:::::H     H:::::H       A:::::::::::::::::::::A
+//             S:::::S  H:::::H     H:::::H      A:::::AAAAAAAAAAAAA:::::A
+// SSSSSSS     S:::::SHH::::::H     H::::::HH   A:::::A             A:::::A
+// S::::::SSSSSS:::::SH:::::::H     H:::::::H  A:::::A               A:::::A
+// S:::::::::::::::SS H:::::::H     H:::::::H A:::::A                 A:::::A
 //  SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHHAAAAAAA                   AAAAAAA
 
 (* dont_touch = "yes" *) piped_wire #(
@@ -595,9 +595,9 @@ sha512_pre #(
     .rst                                        (rst)
 );
 
-//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV     000000000     
-//  SS:::::::::::::::SV::::::V           V::::::V   00:::::::::00   
-// S:::::SSSSSS::::::SV::::::V           V::::::V 00:::::::::::::00 
+//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV     000000000
+//  SS:::::::::::::::SV::::::V           V::::::V   00:::::::::00
+// S:::::SSSSSS::::::SV::::::V           V::::::V 00:::::::::::::00
 // S:::::S     SSSSSSSV::::::V           V::::::V0:::::::000:::::::0
 // S:::::S             V:::::V           V:::::V 0::::::0   0::::::0
 // S:::::S              V:::::V         V:::::V  0:::::0     0:::::0
@@ -608,9 +608,9 @@ sha512_pre #(
 //             S:::::S       V:::::V:::::V       0:::::0     0:::::0
 //             S:::::S        V:::::::::V        0::::::0   0::::::0
 // SSSSSSS     S:::::S         V:::::::V         0:::::::000:::::::0
-// S::::::SSSSSS:::::S          V:::::V           00:::::::::::::00 
-// S:::::::::::::::SS            V:::V              00:::::::::00   
-//  SSSSSSSSSSSSSSS               VVV                 000000000     
+// S::::::SSSSSS:::::S          V:::::V           00:::::::::::::00
+// S:::::::::::::::SS            V:::V              00:::::::::00
+//  SSSSSSSSSSSSSSS               VVV                 000000000
 
 (* dont_touch = "yes" *) piped_wire #(
     .WIDTH                                      ($bits({sv0_f_f, sha_o_m, sha_o_v})),
@@ -672,18 +672,18 @@ sha512_pre #(
     .rst                                        (rst)
 );
 
-//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV  1111111   
-//  SS:::::::::::::::SV::::::V           V::::::V 1::::::1   
-// S:::::SSSSSS::::::SV::::::V           V::::::V1:::::::1   
-// S:::::S     SSSSSSSV::::::V           V::::::V111:::::1   
-// S:::::S             V:::::V           V:::::V    1::::1   
-// S:::::S              V:::::V         V:::::V     1::::1   
-//  S::::SSSS            V:::::V       V:::::V      1::::1   
-//   SS::::::SSSSS        V:::::V     V:::::V       1::::l   
-//     SSS::::::::SS       V:::::V   V:::::V        1::::l   
-//        SSSSSS::::S       V:::::V V:::::V         1::::l   
-//             S:::::S       V:::::V:::::V          1::::l   
-//             S:::::S        V:::::::::V           1::::l   
+//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV  1111111
+//  SS:::::::::::::::SV::::::V           V::::::V 1::::::1
+// S:::::SSSSSS::::::SV::::::V           V::::::V1:::::::1
+// S:::::S     SSSSSSSV::::::V           V::::::V111:::::1
+// S:::::S             V:::::V           V:::::V    1::::1
+// S:::::S              V:::::V         V:::::V     1::::1
+//  S::::SSSS            V:::::V       V:::::V      1::::1
+//   SS::::::SSSSS        V:::::V     V:::::V       1::::l
+//     SSS::::::::SS       V:::::V   V:::::V        1::::l
+//        SSSSSS::::S       V:::::V V:::::V         1::::l
+//             S:::::S       V:::::V:::::V          1::::l
+//             S:::::S        V:::::::::V           1::::l
 // SSSSSSS     S:::::S         V:::::::V         111::::::111
 // S::::::SSSSSS:::::S          V:::::V          1::::::::::1
 // S:::::::::::::::SS            V:::V           1::::::::::1
@@ -749,18 +749,18 @@ sha512_pre #(
     .rst                                        (rst_f_r[1])
 );
 
-//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV 222222222222222    
-//  SS:::::::::::::::SV::::::V           V::::::V2:::::::::::::::22  
-// S:::::SSSSSS::::::SV::::::V           V::::::V2::::::222222:::::2 
-// S:::::S     SSSSSSSV::::::V           V::::::V2222222     2:::::2 
-// S:::::S             V:::::V           V:::::V             2:::::2 
-// S:::::S              V:::::V         V:::::V              2:::::2 
-//  S::::SSSS            V:::::V       V:::::V            2222::::2  
-//   SS::::::SSSSS        V:::::V     V:::::V        22222::::::22   
-//     SSS::::::::SS       V:::::V   V:::::V       22::::::::222     
-//        SSSSSS::::S       V:::::V V:::::V       2:::::22222        
-//             S:::::S       V:::::V:::::V       2:::::2             
-//             S:::::S        V:::::::::V        2:::::2             
+//    SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV 222222222222222
+//  SS:::::::::::::::SV::::::V           V::::::V2:::::::::::::::22
+// S:::::SSSSSS::::::SV::::::V           V::::::V2::::::222222:::::2
+// S:::::S     SSSSSSSV::::::V           V::::::V2222222     2:::::2
+// S:::::S             V:::::V           V:::::V             2:::::2
+// S:::::S              V:::::V         V:::::V              2:::::2
+//  S::::SSSS            V:::::V       V:::::V            2222::::2
+//   SS::::::SSSSS        V:::::V     V:::::V        22222::::::22
+//     SSS::::::::SS       V:::::V   V:::::V       22::::::::222
+//        SSSSSS::::S       V:::::V V:::::V       2:::::22222
+//             S:::::S       V:::::V:::::V       2:::::2
+//             S:::::S        V:::::::::V        2:::::2
 // SSSSSSS     S:::::S         V:::::::V         2:::::2       222222
 // S::::::SSSSSS:::::S          V:::::V          2::::::2222222:::::2
 // S:::::::::::::::SS            V:::V           2::::::::::::::::::2

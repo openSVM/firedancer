@@ -66,7 +66,7 @@ void
 fd_tile_private_boot( int *    pargc,
                       char *** pargv ) {
   FD_LOG_INFO(( "fd_tile: booting" ));
-  
+
   /* We strip the command line so there are no unexpected differences
      downstream but don't actually do anything with the results */
 
