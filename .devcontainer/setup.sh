@@ -29,7 +29,10 @@ apt-get install -y \
     python3-pip \
     net-tools \
     iproute2 \
-    ethtool
+    ethtool \
+    nodejs \
+    npm \
+    yarn
 
 # Set GCC 11 as default
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60 --slave /usr/bin/g++ g++ /usr/bin/g++-11
@@ -38,6 +41,13 @@ update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60 --slave /usr/b
 if ! command -v rustup &> /dev/null; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
     source "$HOME/.cargo/env"
+fi
+
+# Install Solana CLI tools
+echo "📦 Installing Solana CLI..."
+if ! command -v solana &> /dev/null; then
+    sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+    export PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
 fi
 
 # Initialize git submodules
@@ -51,6 +61,61 @@ if [ -f "./deps.sh" ]; then
 else
     echo "⚠️  deps.sh not found, dependencies may need to be installed manually"
 fi
+
+# Install SVM/Solana development tools
+echo "🛠️  Installing SVM/Solana development tools..."
+
+# Source configuration
+source .devcontainer/svm-tools.conf
+
+# Source Rust environment
+source "$HOME/.cargo/env"
+
+# Install Rust-based tools
+echo "📦 Installing Rust-based SVM tools..."
+for tool in "${RUST_TOOLS[@]}"; do
+    echo "Installing $tool..."
+    if eval "cargo install $tool"; then
+        echo "✅ $tool installed successfully"
+    else
+        echo "⚠️  $tool installation failed, continuing..."
+    fi
+done
+
+# Install Node.js tools
+echo "📦 Installing Node.js SVM tools..."
+for tool in "${NODE_TOOLS[@]}"; do
+    echo "Installing $tool..."
+    if npm install -g "$tool"; then
+        echo "✅ $tool installed successfully"
+    else
+        echo "⚠️  $tool installation failed, continuing..."
+    fi
+done
+
+# Install Python packages
+echo "📦 Installing Python SVM tools..."
+for tool in "${PYTHON_TOOLS[@]}"; do
+    echo "Installing $tool..."
+    if pip3 install "$tool"; then
+        echo "✅ $tool installed successfully"
+    else
+        echo "⚠️  $tool installation failed, continuing..."
+    fi
+done
+
+# Clone additional repositories for reference
+echo "📚 Cloning additional SVM reference repositories..."
+mkdir -p /tmp/svm-repos
+cd /tmp/svm-repos
+for repo in "${ADDITIONAL_REPOS[@]}"; do
+    repo_name=$(basename "$repo" .git)
+    if [ ! -d "$repo_name" ]; then
+        echo "Cloning $repo_name..."
+        git clone "$repo" "$repo_name" || echo "Failed to clone $repo_name"
+    fi
+done
+cd /workspace/firedancer
 
 # Build Firedancer for development
 echo "🔨 Building Firedancer..."
@@ -107,5 +172,15 @@ echo "  Dev validator:  fddev dev"
 echo "  Configuration:  ./build/native/gcc/bin/fdctl configure init all --config dev-config.toml"
 echo "  Run validator:  ./build/native/gcc/bin/fdctl run --config dev-config.toml"
 echo ""
-echo "📚 Documentation: https://docs.firedancer.io/"
-echo "💬 GitHub: https://github.com/firedancer-io/firedancer"
+echo "🛠️  SVM/Solana development tools installed:"
+echo "  Solana CLI:     solana --version"
+echo "  Anchor:         anchor --version"
+echo "  Metaboss:       metaboss --version"
+echo "  SPL Token CLI:  spl-token --version"
+echo "  Create dApp:    npx create-solana-dapp my-app"
+echo "  Amman:          amman --help"
+echo ""
+echo "📚 Documentation:"
+echo "  Firedancer:     https://docs.firedancer.io/"
+echo "  SVM Tools:      cat doc/SVM_DEVELOPMENT_TOOLS.md"
+echo "  GitHub:         https://github.com/firedancer-io/firedancer"
